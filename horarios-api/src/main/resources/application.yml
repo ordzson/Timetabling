@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: horarios-api
+  datasource:
+    url: ${HORARIOS_DB_URL:jdbc:postgresql://localhost:5432/horarios}
+    username: ${HORARIOS_DB_USER:usuario_horarios}
+    password: ${HORARIOS_DB_PASSWORD:1234}
+  flyway:
+    enabled: true

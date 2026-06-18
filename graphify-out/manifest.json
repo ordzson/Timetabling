@@ -1,0 +1,87 @@
+{
+  "/home/ordson/Documentos/Universidad/horarios/docs/database.sql": {
+    "mtime": 1781795072.7391737,
+    "ast_hash": "2c8ee2e1c34782654d3a22f7a1d88833",
+    "semantic_hash": "2c8ee2e1c34782654d3a22f7a1d88833"
+  },
+  "/home/ordson/Documentos/Universidad/horarios/AGENTS.md": {
+    "mtime": 1781763371.7483065,
+    "ast_hash": "61d8e4bea6333a388b38ddb1e20fe773",
+    "semantic_hash": "61d8e4bea6333a388b38ddb1e20fe773"
+  },
+  "/home/ordson/Documentos/Universidad/horarios/docs/adr/0001-java-21-spring-boot.md": {
+    "mtime": 1781796393.46206,
+    "ast_hash": "b92d5596085cd76d082937b1ddb87328",
+    "semantic_hash": "b92d5596085cd76d082937b1ddb87328"
+  },
+  "/home/ordson/Documentos/Universidad/horarios/docs/adr/0002-postgresql-jsonb.md": {
+    "mtime": 1781796393.7751486,
+    "ast_hash": "728d295466fdff71478175da7fe0bc0d",
+    "semantic_hash": "728d295466fdff71478175da7fe0bc0d"
+  },
+  "/home/ordson/Documentos/Universidad/horarios/docs/adr/0003-motor-propio-sa-lns.md": {
+    "mtime": 1781796394.108243,
+    "ast_hash": "0a7d5593a2898a57d4d2edd9c5a65bc5",
+    "semantic_hash": "0a7d5593a2898a57d4d2edd9c5a65bc5"
+  },
+  "/home/ordson/Documentos/Universidad/horarios/docs/adr/0004-maven-multimodulo.md": {
+    "mtime": 1781796394.4293334,
+    "ast_hash": "7ffb018f5d61cb5b18a530beb1972a7b",
+    "semantic_hash": "7ffb018f5d61cb5b18a530beb1972a7b"
+  },
+  "/home/ordson/Documentos/Universidad/horarios/docs/adr/0005-no-mvp-entrega-completa.md": {
+    "mtime": 1781796394.7484236,
+    "ast_hash": "84a44396939a5511fd2a4bbdab819476",
+    "semantic_hash": "84a44396939a5511fd2a4bbdab819476"
+  },
+  "/home/ordson/Documentos/Universidad/horarios/docs/adr/0006-react-typescript-dnd-kit.md": {
+    "mtime": 1781796395.061512,
+    "ast_hash": "ea4c36c4bc4cdefb6dbba32321db1c61",
+    "semantic_hash": "ea4c36c4bc4cdefb6dbba32321db1c61"
+  },
+  "/home/ordson/Documentos/Universidad/horarios/docs/adr/0007-jwt-roles.md": {
+    "mtime": 1781796395.3665977,
+    "ast_hash": "41a986685303c9891b5280ef8228ac2d",
+    "semantic_hash": "41a986685303c9891b5280ef8228ac2d"
+  },
+  "/home/ordson/Documentos/Universidad/horarios/docs/adr/0008-openpdf-apache-poi.md": {
+    "mtime": 1781796395.680686,
+    "ast_hash": "678d997b882488f46c1c19916a061b0e",
+    "semantic_hash": "678d997b882488f46c1c19916a061b0e"
+  },
+  "/home/ordson/Documentos/Universidad/horarios/docs/agent-task-backlog.md": {
+    "mtime": 1781803087.9299436,
+    "ast_hash": "a2d2de3045643222b76540c069ec38af",
+    "semantic_hash": "a2d2de3045643222b76540c069ec38af"
+  },
+  "/home/ordson/Documentos/Universidad/horarios/docs/api-contracts.md": {
+    "mtime": 1781803162.4441342,
+    "ast_hash": "8cc27eb4ea28258629592238924330f6",
+    "semantic_hash": "8cc27eb4ea28258629592238924330f6"
+  },
+  "/home/ordson/Documentos/Universidad/horarios/docs/database-design.md": {
+    "mtime": 1781795082.478337,
+    "ast_hash": "0fcf7e04c4880ba23ea262dcaf482e7c",
+    "semantic_hash": "0fcf7e04c4880ba23ea262dcaf482e7c"
+  },
+  "/home/ordson/Documentos/Universidad/horarios/docs/motor-generador-plan.md": {
+    "mtime": 1781803172.8373039,
+    "ast_hash": "09e77af9a81b68f5de0b7bb4d4280267",
+    "semantic_hash": "09e77af9a81b68f5de0b7bb4d4280267"
+  },
+  "/home/ordson/Documentos/Universidad/horarios/docs/project-implementation-plan.md": {
+    "mtime": 1781803167.9382238,
+    "ast_hash": "1f7182aeaae2143a3a9452709bf3cb03",
+    "semantic_hash": "1f7182aeaae2143a3a9452709bf3cb03"
+  },
+  "/home/ordson/Documentos/Universidad/horarios/docs/ui-design-base.md": {
+    "mtime": 1781802485.8160646,
+    "ast_hash": "0a6ff07154ed99305f72a64e1bedc5b2",
+    "semantic_hash": "0a6ff07154ed99305f72a64e1bedc5b2"
+  },
+  "/home/ordson/Documentos/Universidad/horarios/horarios.md": {
+    "mtime": 1781796401.1712146,
+    "ast_hash": "5dd746b903639e4311a1d882f6b8f054",
+    "semantic_hash": "5dd746b903639e4311a1d882f6b8f054"
+  }
+}
