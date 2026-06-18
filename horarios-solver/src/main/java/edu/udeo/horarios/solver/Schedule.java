@@ -49,6 +49,12 @@ public final class Schedule {
     return List.copyOf(bySession.values());
   }
 
+  public Schedule copy() {
+    Schedule copy = new Schedule();
+    assignments().forEach(copy::addAssignment);
+    return copy;
+  }
+
   public List<Assignment> byTeacher(long teacherId) {
     return copy(byTeacher, teacherId);
   }
