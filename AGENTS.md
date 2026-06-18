@@ -25,6 +25,15 @@ Después de que `ponytail` defina el enfoque, usa comunicación `caveman`, salvo
 
 Prioridad: primero `ponytail`, luego `caveman`.
 
+## Graphify
+
+Después de terminar una implementación y su verificación mínima, actualiza el
+grafo con `graphify . --update`.
+
+Si `graphify . --update` requiere una API key LLM por cambios en documentos,
+actualiza al menos la parte estructural de código cuando sea posible y reporta
+qué quedó pendiente.
+
 ## gstack
 
 Prefiere la skill `/browse` de gstack para navegación web cuando esté disponible en el entorno activo.

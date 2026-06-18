@@ -7,3 +7,6 @@ spring:
     password: ${HORARIOS_DB_PASSWORD:1234}
   flyway:
     enabled: true
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
