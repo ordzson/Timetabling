@@ -22,6 +22,7 @@
   "20": "Teacher Continuity",
   "21": "No Timetabling Libraries",
   "22": "Candidate Space File",
+  "23": "Community 23",
   "24": "Issue Severity File",
   "25": "Schedule Result File",
   "26": "Unassigned Session File",
@@ -91,5 +92,12 @@
   "90": "Community 90",
   "91": "Community 91",
   "92": "Community 92",
-  "93": "Community 93"
+  "93": "Community 93",
+  "94": "Community 94",
+  "95": "Community 95",
+  "96": "Community 96",
+  "97": "Community 97",
+  "98": "Community 98",
+  "99": "Community 99",
+  "100": "Community 100"
 }

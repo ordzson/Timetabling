@@ -500,8 +500,8 @@
     "semantic_hash": ""
   },
   "horarios-api/src/main/java/edu/udeo/horarios/api/importing/AcademicImportService.java": {
-    "mtime": 1781816355.7270446,
-    "ast_hash": "a3df00968921b6a7cd0615be3b7a2d17",
+    "mtime": 1781816566.5632463,
+    "ast_hash": "b4ff4669f49724d436230d2650b6e7be",
     "semantic_hash": ""
   },
   "horarios-api/src/main/java/edu/udeo/horarios/api/importing/ImportErrorResponse.java": {

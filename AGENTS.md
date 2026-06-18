@@ -25,6 +25,16 @@ Después de que `ponytail` defina el enfoque, usa comunicación `caveman`, salvo
 
 Prioridad: primero `ponytail`, luego `caveman`.
 
+## Diseño UI
+
+Siempre que una tarea toque UI en `horarios-web` (pantallas, componentes,
+layout, estilos visuales, CSS o tokens de diseño), lee y usa
+`docs/ui-design-base.md` antes de decidir o editar.
+
+Ese documento gobierna la paleta, tipografía, bordes, sombras, radios,
+densidad visual y patrones de interfaz. No introduzcas estilos que contradigan
+esa base salvo pedido explícito del usuario.
+
 ## Graphify
 
 Después de terminar una implementación y su verificación mínima, actualiza el
