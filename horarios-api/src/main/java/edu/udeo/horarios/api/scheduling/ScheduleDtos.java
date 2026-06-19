@@ -100,3 +100,48 @@ record ViolationResponse(
     List<Map<String, Object>> affectedEntities,
     Number cost) {
 }
+
+record ManualEditRequest(
+    String clientRequestId,
+    long baseRunId,
+    long sessionId,
+    Long targetTeacherId,
+    Long targetRoomId,
+    Long targetTimeBlockId) {
+}
+
+record ManualEditResponse(
+    long manualEditId,
+    String status,
+    Long resultRunId,
+    List<Long> pinnedSessionIds,
+    List<Long> neighborhoodSessionIds,
+    List<Long> movedSessionIds,
+    List<Map<String, Object>> remainingViolations,
+    int scoreBefore,
+    int scoreAfter,
+    long repairTimeMs) {
+}
+
+record SubstitutionRequest(
+    long assignmentId,
+    long substituteTeacherId,
+    Instant startsAt,
+    Instant endsAt,
+    boolean isPermanent,
+    String reason) {
+}
+
+record SubstitutionResponse(
+    long id,
+    long assignmentId,
+    long originalTeacherId,
+    long substituteTeacherId,
+    Instant startsAt,
+    Instant endsAt,
+    boolean isPermanent,
+    String reason) {
+}
+
+record SubstitutionListResponse(List<SubstitutionResponse> items) {
+}

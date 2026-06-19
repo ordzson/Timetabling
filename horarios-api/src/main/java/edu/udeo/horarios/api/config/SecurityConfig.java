@@ -6,6 +6,7 @@ import edu.udeo.horarios.api.security.SecurityErrorResponse;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -50,6 +51,7 @@ class SecurityConfig {
         .authorizeHttpRequests(
             requests ->
                 requests
+                    .requestMatchers("/actuator/health").permitAll()
                     .requestMatchers("/api/auth/login").permitAll()
                     .requestMatchers("/api/me").authenticated()
                     .requestMatchers("/api/catalog/**", "/api/imports/**", "/api/schedule-plans/**")
@@ -57,6 +59,7 @@ class SecurityConfig {
                     .requestMatchers("/api/teacher/**").hasRole("TEACHER")
                     .requestMatchers("/api/public/schedules/cohorts/**").hasAnyRole("SUPERADMIN", "ADMIN", "STUDENT")
                     .requestMatchers("/api/reports/**").hasAnyRole("SUPERADMIN", "ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/api/substitutions/**").hasAnyRole("SUPERADMIN", "ADMIN")
                     .requestMatchers("/api/substitutions/**").hasAnyRole("SUPERADMIN", "ADMIN", "TEACHER")
                     .anyRequest().authenticated())
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

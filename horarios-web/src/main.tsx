@@ -1,5 +1,16 @@
 import React, { FormEvent, useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import { CSS } from '@dnd-kit/utilities';
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  PointerSensor,
+  useDraggable,
+  useDroppable,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
 import './styles.css';
 
 type Role = 'SUPERADMIN' | 'ADMIN' | 'TEACHER' | 'STUDENT';
@@ -116,6 +127,75 @@ type Violation = {
   code: string;
   message: string;
   cost?: number;
+};
+
+type Assignment = {
+  id: number;
+  sessionId: number;
+  courseId: number;
+  courseCode: string;
+  courseName: string;
+  teacherId: number;
+  teacherName: string;
+  roomId: number;
+  roomCode: string;
+  cohortIds: number[];
+  dayOfWeek: number;
+  startBlock: number;
+  durationBlocks: number;
+  status: string;
+  pinned: boolean;
+};
+
+type ScheduleResult = {
+  planId: number;
+  runId: number;
+  planStatus: PlanStatus;
+  score?: Record<string, number>;
+  assignments: Assignment[];
+  unassigned: Assignment[];
+};
+
+type ManualEditResponse = {
+  status: string;
+  resultRunId: number;
+  pinnedSessionIds: number[];
+  movedSessionIds: number[];
+  remainingViolations: Violation[];
+  scoreBefore: number;
+  scoreAfter: number;
+  repairTimeMs: number;
+};
+
+type SubstitutionResponse = {
+  id: number;
+  assignmentId: number;
+  originalTeacherId: number;
+  substituteTeacherId: number;
+  startsAt: string;
+  endsAt?: string | null;
+  isPermanent: boolean;
+  reason?: string | null;
+};
+
+type GridView = 'cohort' | 'teacher' | 'room';
+
+type SubstitutionDraft = {
+  assignmentId: string;
+  substituteTeacherId: string;
+  startsAt: string;
+  endsAt: string;
+  isPermanent: boolean;
+  reason: string;
+};
+
+type ManualDraft = {
+  assignment: Assignment;
+  targetDay: number;
+  targetStartBlock: number;
+  targetTimeBlockId: string;
+  targetTeacherId: string;
+  targetRoomId: string;
 };
 
 const API_BASE = ((import.meta as ImportMeta & { env?: Record<string, string> }).env?.VITE_API_BASE) ?? '';
@@ -523,7 +603,18 @@ function SchedulePlanPage({ token }: { token: string }) {
   const [runId, setRunId] = useState<number | null>(null);
   const [validation, setValidation] = useState<ValidationResponse | null>(null);
   const [generation, setGeneration] = useState<GenerationResponse | null>(null);
+  const [result, setResult] = useState<ScheduleResult | null>(null);
   const [violations, setViolations] = useState<Violation[]>([]);
+  const [manualResult, setManualResult] = useState<ManualEditResponse | null>(null);
+  const [substitutions, setSubstitutions] = useState<SubstitutionResponse[]>([]);
+  const [substitutionDraft, setSubstitutionDraft] = useState<SubstitutionDraft>({
+    assignmentId: '',
+    substituteTeacherId: '',
+    startsAt: new Date().toISOString().slice(0, 16),
+    endsAt: '',
+    isPermanent: false,
+    reason: '',
+  });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState('');
   const numericPlanId = Number(planId);
@@ -563,7 +654,26 @@ function SchedulePlanPage({ token }: { token: string }) {
       setGeneration(response);
       setRunId(response.runId);
       setStatus(response.planStatus);
+      void loadResult(response.runId);
       void loadViolations(response.runId);
+    }
+  }
+
+  async function loadResult(nextRunId = runId) {
+    const query = nextRunId ? `?runId=${nextRunId}` : '';
+    const response = await runAction('result', () => api<ScheduleResult>(`/api/schedule-plans/${numericPlanId}/result${query}`, {}, token));
+    if (response) {
+      setResult(response);
+      setRunId(response.runId);
+      setStatus(response.planStatus);
+      void loadSubstitutions();
+    }
+  }
+
+  async function loadSubstitutions() {
+    const response = await runAction('substitutions', () => api<{ items: SubstitutionResponse[] }>(`/api/substitutions?planId=${numericPlanId}`, {}, token));
+    if (response) {
+      setSubstitutions(response.items);
     }
   }
 
@@ -595,13 +705,57 @@ function SchedulePlanPage({ token }: { token: string }) {
     }
   }
 
+  async function submitManualEdit(draft: ManualDraft) {
+    if (runId === null) {
+      setError('Carga un resultado antes de editar.');
+      return;
+    }
+    const response = await runAction('manual-edit', () => api<ManualEditResponse>(`/api/schedule-plans/${numericPlanId}/manual-edits`, {
+      method: 'POST',
+      body: JSON.stringify({
+        clientRequestId: `edit-${Date.now()}-${draft.assignment.sessionId}`,
+        baseRunId: runId,
+        sessionId: draft.assignment.sessionId,
+        targetTeacherId: draft.targetTeacherId ? Number(draft.targetTeacherId) : null,
+        targetRoomId: draft.targetRoomId ? Number(draft.targetRoomId) : null,
+        targetTimeBlockId: Number(draft.targetTimeBlockId),
+      }),
+    }, token));
+    if (response) {
+      setManualResult(response);
+      setRunId(response.resultRunId);
+      await loadResult(response.resultRunId);
+      await loadViolations(response.resultRunId);
+    }
+  }
+
+  async function createSubstitution(event: FormEvent) {
+    event.preventDefault();
+    const response = await runAction('substitution', () => api<SubstitutionResponse>('/api/substitutions', {
+      method: 'POST',
+      body: JSON.stringify({
+        assignmentId: Number(substitutionDraft.assignmentId),
+        substituteTeacherId: Number(substitutionDraft.substituteTeacherId),
+        startsAt: new Date(substitutionDraft.startsAt).toISOString(),
+        endsAt: substitutionDraft.endsAt ? new Date(substitutionDraft.endsAt).toISOString() : null,
+        isPermanent: substitutionDraft.isPermanent,
+        reason: substitutionDraft.reason || null,
+      }),
+    }, token));
+    if (response) {
+      setSubstitutions((current) => [response, ...current]);
+      await loadResult();
+    }
+  }
+
   const canValidate = ['DRAFT', 'INVALID_INPUT', 'GENERATED', 'GENERATED_WITH_CONFLICTS'].includes(status);
   const canGenerate = canValidate && !validation?.hasBlockingErrors;
   const canApprove = ['GENERATED', 'GENERATED_WITH_CONFLICTS'].includes(status) && runId !== null;
   const canLock = status === 'APPROVED';
+  const canManualEdit = status === 'APPROVED';
 
   return (
-    <div className="work-layout">
+    <div className="plans-page">
       <section className="form-panel">
         <p className="eyebrow">Plan de horario</p>
         <h2>Validar y generar</h2>
@@ -625,6 +779,9 @@ function SchedulePlanPage({ token }: { token: string }) {
             Bloquear
           </button>
         </div>
+        <button className="ghost" type="button" onClick={() => { void loadResult(); void loadViolations(); }} disabled={!hasPlan || loading !== ''}>
+          Cargar resultado
+        </button>
       </section>
       <section className="catalog-main">
         <div className="section-title">
@@ -637,11 +794,467 @@ function SchedulePlanPage({ token }: { token: string }) {
           <Metric label="Motor" value={generation?.engineVersion ?? '-'} />
           <Metric label="Seed" value={generation?.seed ?? '-'} />
         </div>
-        <IssueTable title="Errores de validacion" items={validation?.issues ?? []} />
-        <IssueTable title="Conflictos" items={violations} />
+        {manualResult ? <ManualEditSummary result={manualResult} /> : null}
+        {result ? (
+          <ScheduleGrid
+            assignments={result.assignments}
+            canEdit={canManualEdit}
+            loading={loading === 'manual-edit'}
+            onEdit={submitManualEdit}
+          />
+        ) : (
+          <div className="empty-state">
+            <h2>Sin resultado cargado</h2>
+            <p>Genera o carga el resultado del plan para ver la grilla.</p>
+          </div>
+        )}
+        {result ? (
+          <SubstitutionPanel
+            assignments={result.assignments}
+            draft={substitutionDraft}
+            items={substitutions}
+            loading={loading === 'substitution'}
+            onChange={setSubstitutionDraft}
+            onSubmit={createSubstitution}
+          />
+        ) : null}
       </section>
+      <ConflictPanel validation={validation?.issues ?? []} violations={violations} unassigned={result?.unassigned ?? []} />
     </div>
   );
+}
+
+const DAYS = ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'];
+
+function ScheduleGrid({
+  assignments,
+  canEdit,
+  loading,
+  onEdit,
+}: {
+  assignments: Assignment[];
+  canEdit: boolean;
+  loading: boolean;
+  onEdit: (draft: ManualDraft) => Promise<void>;
+}) {
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
+  const [view, setView] = useState<GridView>('cohort');
+  const [filter, setFilter] = useState('all');
+  const [draft, setDraft] = useState<ManualDraft | null>(null);
+  const [activeAssignment, setActiveAssignment] = useState<Assignment | null>(null);
+  const options = useMemo(() => gridOptions(assignments, view), [assignments, view]);
+  const visibleAssignments = useMemo(
+    () => assignments.filter((assignment) => matchesGridFilter(assignment, view, filter)),
+    [assignments, filter, view],
+  );
+  const maxBlock = Math.max(7, ...assignments.map((assignment) => assignment.startBlock + assignment.durationBlocks - 1));
+  const blocks = Array.from({ length: maxBlock + 1 }, (_, index) => index);
+
+  function moveFromDrag(event: DragEndEvent) {
+    const assignment = assignments.find((item) => `session-${item.sessionId}` === event.active.id);
+    setActiveAssignment(null);
+    if (!assignment || !event.over || !canEdit) {
+      return;
+    }
+    const [, day, block] = String(event.over.id).split(':');
+    openDraft(assignment, Number(day), Number(block));
+  }
+
+  function openDraft(assignment: Assignment, targetDay = assignment.dayOfWeek, targetStartBlock = assignment.startBlock) {
+    setDraft({
+      assignment,
+      targetDay,
+      targetStartBlock,
+      targetTimeBlockId: String(toTimeBlockId(targetDay, targetStartBlock)),
+      targetTeacherId: String(assignment.teacherId),
+      targetRoomId: String(assignment.roomId),
+    });
+  }
+
+  return (
+    <section className="schedule-area">
+      <div className="section-title">
+        <h2>Grilla semanal</h2>
+        <StatusBadge status={canEdit ? 'APPROVED' : 'READ_ONLY'} />
+      </div>
+      <div className="filters">
+        <label>
+          Vista
+          <select value={view} onChange={(event) => { setView(event.target.value as GridView); setFilter('all'); }}>
+            <option value="cohort">Cohorte</option>
+            <option value="teacher">Docente</option>
+            <option value="room">Aula</option>
+          </select>
+        </label>
+        <label>
+          Filtro
+          <select value={filter} onChange={(event) => setFilter(event.target.value)}>
+            <option value="all">Todos</option>
+            {options.map((option) => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
+          </select>
+        </label>
+      </div>
+      <DndContext
+        sensors={sensors}
+        onDragStart={(event) => setActiveAssignment(assignments.find((item) => `session-${item.sessionId}` === event.active.id) ?? null)}
+        onDragEnd={moveFromDrag}
+        onDragCancel={() => setActiveAssignment(null)}
+      >
+        <div className="schedule-grid" style={{ gridTemplateColumns: `84px repeat(${DAYS.length}, minmax(160px, 1fr))` }}>
+          <div className="grid-head">Bloque</div>
+          {DAYS.map((day) => <div className="grid-head" key={day}>{day}</div>)}
+          {blocks.map((block) => (
+            <React.Fragment key={block}>
+              <div className="grid-time">B{block + 1}</div>
+              {DAYS.map((_, index) => {
+                const day = index + 1;
+                const cellAssignments = visibleAssignments.filter(
+                  (assignment) => assignment.dayOfWeek === day && assignment.startBlock === block,
+                );
+                return (
+                  <GridCell canDrop={canEdit} day={day} block={block} key={`${day}-${block}`}>
+                    {cellAssignments.map((assignment) => (
+                      <SessionBlock
+                        assignment={assignment}
+                        canEdit={canEdit && !assignment.pinned}
+                        key={assignment.id}
+                        onOpen={() => openDraft(assignment)}
+                      />
+                    ))}
+                  </GridCell>
+                );
+              })}
+            </React.Fragment>
+          ))}
+        </div>
+        <DragOverlay>{activeAssignment ? <SessionCard assignment={activeAssignment} /> : null}</DragOverlay>
+      </DndContext>
+      {draft ? (
+        <ManualEditDrawer
+          draft={draft}
+          loading={loading}
+          onChange={setDraft}
+          onClose={() => setDraft(null)}
+          onSubmit={async () => {
+            await onEdit(draft);
+            setDraft(null);
+          }}
+        />
+      ) : null}
+    </section>
+  );
+}
+
+function GridCell({ canDrop, day, block, children }: { canDrop: boolean; day: number; block: number; children: React.ReactNode }) {
+  const { isOver, setNodeRef } = useDroppable({ id: `cell:${day}:${block}`, disabled: !canDrop });
+  return (
+    <div className={`grid-cell ${isOver ? 'over' : ''}`} ref={setNodeRef}>
+      {children}
+    </div>
+  );
+}
+
+function SessionBlock({
+  assignment,
+  canEdit,
+  onOpen,
+}: {
+  assignment: Assignment;
+  canEdit: boolean;
+  onOpen: () => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: `session-${assignment.sessionId}`,
+    disabled: !canEdit,
+  });
+  const style = { transform: CSS.Translate.toString(transform) };
+  return (
+    <button
+      className={`session-block ${assignment.pinned ? 'pinned' : ''} ${isDragging ? 'dragging' : ''}`}
+      onClick={onOpen}
+      ref={setNodeRef}
+      style={style}
+      type="button"
+      {...listeners}
+      {...attributes}
+    >
+      <SessionCard assignment={assignment} />
+    </button>
+  );
+}
+
+function SessionCard({ assignment }: { assignment: Assignment }) {
+  return (
+    <>
+      <strong>{assignment.courseCode}</strong>
+      <span>{assignment.courseName}</span>
+      <small>{assignment.teacherName}</small>
+      <div className="session-badges">
+        <em>Aula {assignment.roomCode}</em>
+        <em>C{assignment.cohortIds.join(',')}</em>
+        {assignment.pinned ? <em>Fijada</em> : null}
+      </div>
+    </>
+  );
+}
+
+function ManualEditDrawer({
+  draft,
+  loading,
+  onChange,
+  onClose,
+  onSubmit,
+}: {
+  draft: ManualDraft;
+  loading: boolean;
+  onChange: (draft: ManualDraft) => void;
+  onClose: () => void;
+  onSubmit: () => void;
+}) {
+  return (
+    <aside className="drawer" aria-label="Edicion manual">
+      <div className="section-title">
+        <h2>Edicion manual</h2>
+        <button className="ghost icon-button" onClick={onClose} type="button">x</button>
+      </div>
+      <p className="muted">{draft.assignment.courseCode} · sesion {draft.assignment.sessionId}</p>
+      <label>
+        Dia destino
+        <select
+          value={draft.targetDay}
+          onChange={(event) => {
+            const targetDay = Number(event.target.value);
+            onChange({ ...draft, targetDay, targetTimeBlockId: String(toTimeBlockId(targetDay, draft.targetStartBlock)) });
+          }}
+        >
+          {DAYS.map((day, index) => <option key={day} value={index + 1}>{day}</option>)}
+        </select>
+      </label>
+      <label>
+        Bloque destino
+        <input
+          min="0"
+          type="number"
+          value={draft.targetStartBlock}
+          onChange={(event) => {
+            const targetStartBlock = Number(event.target.value);
+            onChange({ ...draft, targetStartBlock, targetTimeBlockId: String(toTimeBlockId(draft.targetDay, targetStartBlock)) });
+          }}
+        />
+      </label>
+      <label>
+        ID bloque tiempo
+        <input value={draft.targetTimeBlockId} onChange={(event) => onChange({ ...draft, targetTimeBlockId: event.target.value })} type="number" min="1" />
+      </label>
+      <label>
+        Docente destino
+        <input value={draft.targetTeacherId} onChange={(event) => onChange({ ...draft, targetTeacherId: event.target.value })} type="number" min="1" />
+      </label>
+      <label>
+        Aula destino
+        <input value={draft.targetRoomId} onChange={(event) => onChange({ ...draft, targetRoomId: event.target.value })} type="number" min="1" />
+      </label>
+      <button type="button" onClick={onSubmit} disabled={loading || draft.assignment.pinned || !draft.targetTimeBlockId}>
+        {loading ? 'Aplicando...' : 'Aplicar LNS'}
+      </button>
+    </aside>
+  );
+}
+
+function ConflictPanel({
+  validation,
+  violations,
+  unassigned,
+}: {
+  validation: ValidationIssue[];
+  violations: Violation[];
+  unassigned: Assignment[];
+}) {
+  const hard = [...validation.filter((item) => item.severity === 'ERROR'), ...violations.filter((item) => item.severity === 'ERROR')];
+  const soft = [...validation.filter((item) => item.severity !== 'ERROR'), ...violations.filter((item) => item.severity !== 'ERROR')];
+  return (
+    <aside className="conflict-panel">
+      <h2>Conflictos</h2>
+      <ConflictList title="Duros" tone="danger" items={hard} />
+      <ConflictList title="Blandos" tone="warning" items={soft} />
+      <div className="conflict-list suggestion">
+        <h3>Sin asignar</h3>
+        {unassigned.map((item) => <p key={item.sessionId}>{item.courseCode} · sesion {item.sessionId}</p>)}
+        {!unassigned.length ? <p>Sin sesiones no asignadas</p> : null}
+      </div>
+    </aside>
+  );
+}
+
+function ConflictList({ title, tone, items }: { title: string; tone: 'danger' | 'warning'; items: (ValidationIssue | Violation)[] }) {
+  return (
+    <div className={`conflict-list ${tone}`}>
+      <h3>{title}</h3>
+      {items.map((item) => <p key={`${item.code}-${item.id}`}><strong>{item.code}</strong> {item.message}</p>)}
+      {!items.length ? <p>Sin registros</p> : null}
+    </div>
+  );
+}
+
+function ManualEditSummary({ result }: { result: ManualEditResponse }) {
+  return (
+    <div className="lns-result">
+      <Metric label="LNS" value={result.status} />
+      <Metric label="Movidas" value={result.movedSessionIds.length} />
+      <Metric label="Fijadas" value={result.pinnedSessionIds.length} />
+      <Metric label="Restantes" value={result.remainingViolations.length} />
+    </div>
+  );
+}
+
+function SubstitutionPanel({
+  assignments,
+  draft,
+  items,
+  loading,
+  onChange,
+  onSubmit,
+}: {
+  assignments: Assignment[];
+  draft: SubstitutionDraft;
+  items: SubstitutionResponse[];
+  loading: boolean;
+  onChange: (draft: SubstitutionDraft) => void;
+  onSubmit: (event: FormEvent) => void;
+}) {
+  return (
+    <section className="substitution-panel">
+      <div className="section-title">
+        <h2>Sustituciones</h2>
+        <span className="muted">{items.length} vigentes/historicas</span>
+      </div>
+      <form className="substitution-form" onSubmit={onSubmit}>
+        <label>
+          Clase base
+          <select
+            required
+            value={draft.assignmentId}
+            onChange={(event) => onChange({ ...draft, assignmentId: event.target.value })}
+          >
+            <option value="">Selecciona clase</option>
+            {assignments.map((assignment) => (
+              <option key={assignment.id} value={assignment.id}>
+                {assignment.courseCode} · {assignment.teacherName} · {DAYS[assignment.dayOfWeek - 1]} B{assignment.startBlock + 1}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          ID docente sustituto
+          <input
+            min="1"
+            required
+            type="number"
+            value={draft.substituteTeacherId}
+            onChange={(event) => onChange({ ...draft, substituteTeacherId: event.target.value })}
+          />
+        </label>
+        <label>
+          Inicio
+          <input
+            required
+            type="datetime-local"
+            value={draft.startsAt}
+            onChange={(event) => onChange({ ...draft, startsAt: event.target.value })}
+          />
+        </label>
+        <label>
+          Fin
+          <input
+            type="datetime-local"
+            value={draft.endsAt}
+            onChange={(event) => onChange({ ...draft, endsAt: event.target.value })}
+          />
+        </label>
+        <label className="checkbox">
+          <input
+            checked={draft.isPermanent}
+            onChange={(event) => onChange({ ...draft, isPermanent: event.target.checked })}
+            type="checkbox"
+          />
+          Permanente
+        </label>
+        <label>
+          Motivo
+          <input value={draft.reason} onChange={(event) => onChange({ ...draft, reason: event.target.value })} />
+        </label>
+        <button type="submit" disabled={loading || !draft.assignmentId || !draft.substituteTeacherId}>
+          {loading ? 'Guardando...' : 'Crear sustitucion'}
+        </button>
+      </form>
+      <div className="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Clase</th>
+              <th>Original</th>
+              <th>Sustituto</th>
+              <th>Inicio</th>
+              <th>Fin</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((item) => (
+              <tr key={item.id}>
+                <td>{item.id}</td>
+                <td>{item.assignmentId}</td>
+                <td>{item.originalTeacherId}</td>
+                <td>{item.substituteTeacherId}</td>
+                <td>{new Date(item.startsAt).toLocaleString()}</td>
+                <td>{item.endsAt ? new Date(item.endsAt).toLocaleString() : 'Sin fin'}</td>
+              </tr>
+            ))}
+            {!items.length ? (
+              <tr>
+                <td colSpan={6}>Sin sustituciones</td>
+              </tr>
+            ) : null}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+function gridOptions(assignments: Assignment[], view: GridView) {
+  const map = new Map<string, string>();
+  for (const assignment of assignments) {
+    if (view === 'teacher') {
+      map.set(String(assignment.teacherId), assignment.teacherName);
+    } else if (view === 'room') {
+      map.set(String(assignment.roomId), assignment.roomCode);
+    } else {
+      for (const cohortId of assignment.cohortIds) {
+        map.set(String(cohortId), `Cohorte ${cohortId}`);
+      }
+    }
+  }
+  return [...map.entries()].map(([value, label]) => ({ value, label }));
+}
+
+function matchesGridFilter(assignment: Assignment, view: GridView, filter: string) {
+  if (filter === 'all') {
+    return true;
+  }
+  if (view === 'teacher') {
+    return String(assignment.teacherId) === filter;
+  }
+  if (view === 'room') {
+    return String(assignment.roomId) === filter;
+  }
+  return assignment.cohortIds.map(String).includes(filter);
+}
+
+function toTimeBlockId(day: number, startBlock: number) {
+  return day * 1000 + startBlock;
 }
 
 function Metric({ label, value }: { label: string; value: string | number }) {

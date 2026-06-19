@@ -134,18 +134,29 @@ class ScheduleGenerationService {
         jdbc.query(
             """
             select a.id, a.session_id, s.course_id, c.code course_code, c.name course_name,
-                   a.teacher_id, t.full_name teacher_name, a.room_id, r.code room_code,
+                   coalesce(se.substitute_teacher_id, a.teacher_id) teacher_id,
+                   coalesce(st.full_name, t.full_name) teacher_name, a.room_id, r.code room_code,
                    coalesce(jsonb_agg(sc.cohort_id order by sc.cohort_id) filter (where sc.cohort_id is not null), '[]'::jsonb)::text cohort_ids,
                    tb.day_of_week, tb.block_index, a.duration_blocks, a.status::text, a.pinned
             from schedule_assignment a
             join schedule_session s on s.id = a.session_id
             join course c on c.id = s.course_id
             left join teacher t on t.id = a.teacher_id
+            left join lateral (
+              select substitute_teacher_id
+              from substitution_event se
+              where se.assignment_id = a.id
+                and se.starts_at <= now()
+                and (se.ends_at is null or se.ends_at >= now())
+              order by se.starts_at desc, se.id desc
+              limit 1
+            ) se on true
+            left join teacher st on st.id = se.substitute_teacher_id
             left join room r on r.id = a.room_id
             left join time_block tb on tb.id = a.start_time_block_id
             left join schedule_session_cohort sc on sc.session_id = s.id
             where a.plan_id = ? and a.run_id = ? and a.status = 'ASSIGNED'::assignment_status
-            group by a.id, s.course_id, c.code, c.name, t.full_name, r.code, tb.day_of_week, tb.block_index
+            group by a.id, s.course_id, c.code, c.name, se.substitute_teacher_id, st.full_name, t.full_name, r.code, tb.day_of_week, tb.block_index
             order by tb.day_of_week, tb.block_index, c.code
             """,
             (rs, rowNum) -> assignment(rs),

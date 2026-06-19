@@ -5,8 +5,8 @@
     "semantic_hash": "2c8ee2e1c34782654d3a22f7a1d88833"
   },
   "AGENTS.md": {
-    "mtime": 1781816064.1074052,
-    "ast_hash": "af25bdf769b8ef4604eef1dafa272f8e",
+    "mtime": 1781819930.0175977,
+    "ast_hash": "cb2d931e8950fbb45b424a40dd493d26",
     "semantic_hash": ""
   },
   "docs/adr/0001-java-21-spring-boot.md": {
@@ -110,9 +110,9 @@
     "semantic_hash": "b88e9416bb7c1453e424389da621aef9"
   },
   "horarios-solver/src/main/java/edu/udeo/horarios/solver/Schedule.java": {
-    "mtime": 1781813978.915739,
-    "ast_hash": "8c27de97659de8cafa3edc4ac66f66ba",
-    "semantic_hash": "8c27de97659de8cafa3edc4ac66f66ba"
+    "mtime": 1781820415.827369,
+    "ast_hash": "bef1c9e38e5e7cfe746c8765f144bc16",
+    "semantic_hash": ""
   },
   "horarios-solver/src/main/java/edu/udeo/horarios/solver/SchedulingProblem.java": {
     "mtime": 1781814843.2022388,
@@ -255,13 +255,13 @@
     "semantic_hash": "6cb125717b03670af3d53e05456c768e"
   },
   "horarios-web/package.json": {
-    "mtime": 1781806003.4799333,
-    "ast_hash": "b6c87dd1987a31db649852c8a34ba59d",
-    "semantic_hash": "b6c87dd1987a31db649852c8a34ba59d"
+    "mtime": 1781821757.9111333,
+    "ast_hash": "5406177b2e83a6564b6c62ab57703c27",
+    "semantic_hash": ""
   },
   "horarios-web/src/main.tsx": {
-    "mtime": 1781819206.5868561,
-    "ast_hash": "30d9c0f583ac021cac81eda0a0883cfe",
+    "mtime": 1781821860.198408,
+    "ast_hash": "9359e2b1d158ff1baad9db0229a2a1a1",
     "semantic_hash": ""
   },
   "horarios-web/tsconfig.json": {
@@ -540,13 +540,13 @@
     "semantic_hash": ""
   },
   "horarios-api/src/main/java/edu/udeo/horarios/api/scheduling/ScheduleDtos.java": {
-    "mtime": 1781816992.5026813,
-    "ast_hash": "309b45cae3a9baba8219fcfb6c1c5f39",
+    "mtime": 1781821388.3096101,
+    "ast_hash": "cdd889cbfbfaa5a60cc9e9399e3a4011",
     "semantic_hash": ""
   },
   "horarios-api/src/main/java/edu/udeo/horarios/api/scheduling/ScheduleGenerationController.java": {
-    "mtime": 1781817312.590152,
-    "ast_hash": "e7c5a818a98f2e630bdf1e0e1c17e45b",
+    "mtime": 1781821388.6236124,
+    "ast_hash": "6bbe8c02844efe5848153adc4534b75d",
     "semantic_hash": ""
   },
   "horarios-api/src/main/java/edu/udeo/horarios/api/scheduling/ScheduleGenerationService.java": {
@@ -600,13 +600,163 @@
     "semantic_hash": ""
   },
   "horarios-api/src/test/java/edu/udeo/horarios/api/scheduling/ScheduleGenerationControllerTest.java": {
-    "mtime": 1781818707.798557,
-    "ast_hash": "cc6a9ba4ac0866da9b6fd78bb648bd9e",
+    "mtime": 1781821485.0552547,
+    "ast_hash": "3379a535b43f7a96ea0e38d2a119887f",
     "semantic_hash": ""
   },
   "horarios-api/src/test/java/edu/udeo/horarios/api/security/AuthControllerTest.java": {
     "mtime": 1781818708.2675571,
     "ast_hash": "0fb0adcc539e788e38349603f43b2bf5",
+    "semantic_hash": ""
+  },
+  "horarios-api/src/main/java/edu/udeo/horarios/api/scheduling/ManualEditService.java": {
+    "mtime": 1781821629.156137,
+    "ast_hash": "6a374313dd5472837ec82a0793b66bf4",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/main/java/edu/udeo/horarios/solver/AnnealingConfig.java": {
+    "mtime": 1781820418.5534317,
+    "ast_hash": "165989157ce59647d51c75758d369345",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/main/java/edu/udeo/horarios/solver/AnnealingOptimizer.java": {
+    "mtime": 1781820418.8364382,
+    "ast_hash": "177291cf5bf6539e23f06e56403547e5",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/main/java/edu/udeo/horarios/solver/IncrementalSoftScorer.java": {
+    "mtime": 1781820416.7633905,
+    "ast_hash": "fe9f8955bfa3a0f68a960aa4523ca01d",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/main/java/edu/udeo/horarios/solver/ManualEditApplier.java": {
+    "mtime": 1781821245.094557,
+    "ast_hash": "2298809bd7f007272e543788c89aa474",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/main/java/edu/udeo/horarios/solver/ManualEditCommand.java": {
+    "mtime": 1781821244.8005548,
+    "ast_hash": "b61f623c99e8c6b8135c9969e23fda7c",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/main/java/edu/udeo/horarios/solver/MoveApplier.java": {
+    "mtime": 1781820418.252425,
+    "ast_hash": "256b1a03946469e42655cea22788d2b6",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/main/java/edu/udeo/horarios/solver/MoveEvaluation.java": {
+    "mtime": 1781820417.344404,
+    "ast_hash": "39a34c13899fcff42f04ffd72beeaefe",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/main/java/edu/udeo/horarios/solver/MoveEvaluator.java": {
+    "mtime": 1781820417.951418,
+    "ast_hash": "d166b2fe8cd57a6217d76fedc46c52b9",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/main/java/edu/udeo/horarios/solver/MoveGenerator.java": {
+    "mtime": 1781820417.6664114,
+    "ast_hash": "254fcf05b8e08a651e102e5f8da82c33",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/main/java/edu/udeo/horarios/solver/MoveProposal.java": {
+    "mtime": 1781820417.0473971,
+    "ast_hash": "5884e705e68d9d21651a82e83859333d",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/main/java/edu/udeo/horarios/solver/NeighborhoodCause.java": {
+    "mtime": 1781821245.3885593,
+    "ast_hash": "1b842b218054fec4459c14412de86a31",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/main/java/edu/udeo/horarios/solver/NeighborhoodRepairer.java": {
+    "mtime": 1781821247.136573,
+    "ast_hash": "be57034e71210d0a613c89e87fa1cf56",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/main/java/edu/udeo/horarios/solver/NeighborhoodSelector.java": {
+    "mtime": 1781821245.9395638,
+    "ast_hash": "ded9bd12208677e92bd52ba0b2cd5fdd",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/main/java/edu/udeo/horarios/solver/RepairNeighborhood.java": {
+    "mtime": 1781821245.6735616,
+    "ast_hash": "c1b70f6ba20f1b24ab04f02a1e427a6a",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/main/java/edu/udeo/horarios/solver/RepairResult.java": {
+    "mtime": 1781821246.8365707,
+    "ast_hash": "98088a0cd9b4ff964017c7c09130893c",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/main/java/edu/udeo/horarios/solver/RepairStatus.java": {
+    "mtime": 1781821246.5495684,
+    "ast_hash": "6ff9beec94ac573bb047fb4fb49889a2",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/main/java/edu/udeo/horarios/solver/RepairViolation.java": {
+    "mtime": 1781821246.256566,
+    "ast_hash": "27b9d694727980275186f73d2130b4ea",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/main/java/edu/udeo/horarios/solver/RoomDistanceCalculator.java": {
+    "mtime": 1781820416.4713838,
+    "ast_hash": "45e9dc88402e6b36914fb52c45644144",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/main/java/edu/udeo/horarios/solver/Score.java": {
+    "mtime": 1781820416.1513765,
+    "ast_hash": "1ea25f1e728100a843355e41f8ce583d",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/test/java/edu/udeo/horarios/solver/AnnealingOptimizerTest.java": {
+    "mtime": 1781820470.419577,
+    "ast_hash": "1a8ab41b82bf826e1a496f42060f8274",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/test/java/edu/udeo/horarios/solver/NeighborhoodRepairerTest.java": {
+    "mtime": 1781821517.7514625,
+    "ast_hash": "378ab914501b4d0359b8c900d5454cc7",
+    "semantic_hash": ""
+  },
+  "horarios-solver/src/test/java/edu/udeo/horarios/solver/SolverBenchmarkContractTest.java": {
+    "mtime": 1781820926.902601,
+    "ast_hash": "fbb85a249d7b8f41b8ae1538fba9e553",
+    "semantic_hash": ""
+  },
+  "horarios-testkit/src/main/java/edu/udeo/horarios/testkit/BenchmarkFixtures.java": {
+    "mtime": 1781820926.0215914,
+    "ast_hash": "f4d409cd47c656eb2cc7cc0b1169c8db",
+    "semantic_hash": ""
+  },
+  "horarios-testkit/src/main/java/edu/udeo/horarios/testkit/BenchmarkRunner.java": {
+    "mtime": 1781821019.2555692,
+    "ast_hash": "e50aa51c56cb6e397e5904055418b2fe",
+    "semantic_hash": ""
+  },
+  "horarios-testkit/src/test/java/edu/udeo/horarios/testkit/BenchmarkRunnerTest.java": {
+    "mtime": 1781820926.6045978,
+    "ast_hash": "efa37ea72fb867f93ce3266e0ca1b8fb",
+    "semantic_hash": ""
+  },
+  "docs/benchmarks.md": {
+    "mtime": 1781821019.5505722,
+    "ast_hash": "6c1dfacd7a62d80479db66612c47dc63",
+    "semantic_hash": ""
+  },
+  "horarios-api/src/main/java/edu/udeo/horarios/api/reporting/ReportController.java": {
+    "mtime": 1781822413.2205038,
+    "ast_hash": "6dcc5ea696f5995498cc0f5d9c2054fc",
+    "semantic_hash": ""
+  },
+  "horarios-api/src/main/java/edu/udeo/horarios/api/reporting/ReportService.java": {
+    "mtime": 1781822279.1054368,
+    "ast_hash": "c2807d89292efb0bc28befd55fc30e1b",
+    "semantic_hash": ""
+  },
+  "horarios-api/src/test/java/edu/udeo/horarios/api/reporting/ReportControllerTest.java": {
+    "mtime": 1781822328.6896622,
+    "ast_hash": "c90f3c77e1b8694110fe0f42cbfaa546",
     "semantic_hash": ""
   }
 }

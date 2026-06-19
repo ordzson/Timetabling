@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/schedule-plans/{planId}")
 class ScheduleGenerationController {
   private final ScheduleGenerationService service;
+  private final ManualEditService manualEditService;
 
-  ScheduleGenerationController(ScheduleGenerationService service) {
+  ScheduleGenerationController(ScheduleGenerationService service, ManualEditService manualEditService) {
     this.service = service;
+    this.manualEditService = manualEditService;
   }
 
   @PostMapping("/validate")
@@ -41,5 +43,11 @@ class ScheduleGenerationController {
       @RequestParam(name = "runId", required = false) Long runId,
       @RequestParam(name = "severity", required = false) String severity) {
     return service.violations(planId, runId, severity);
+  }
+
+  @PostMapping("/manual-edits")
+  ManualEditResponse manualEdit(
+      @PathVariable("planId") long planId, @RequestBody ManualEditRequest request) {
+    return manualEditService.apply(planId, request);
   }
 }

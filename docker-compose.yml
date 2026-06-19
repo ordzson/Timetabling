@@ -1,0 +1,46 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: horarios
+      POSTGRES_USER: usuario_horarios
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - "5433:5432"
+    volumes:
+      - horarios-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U usuario_horarios -d horarios"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+    environment:
+      HORARIOS_DB_URL: jdbc:postgresql://postgres:5432/horarios
+      HORARIOS_DB_USER: usuario_horarios
+      HORARIOS_DB_PASSWORD: 1234
+      HORARIOS_AUTH_JWT_SECRET: local-dev-secret-change-me
+      HORARIOS_AUTH_JWT_TTL_SECONDS: 3600
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ./horarios-web
+      args:
+        VITE_API_BASE: http://localhost:8080
+    ports:
+      - "8081:80"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  horarios-postgres:
