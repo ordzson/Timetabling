@@ -2,7 +2,9 @@ package edu.udeo.horarios.api.security;
 
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.blankOrNullString;
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -27,6 +29,25 @@ class AuthControllerTest {
   @Autowired private MockMvc mockMvc;
   @Autowired private JdbcTemplate jdbc;
   @Autowired private PasswordEncoder passwordEncoder;
+
+  @Test
+  void loginPreflightAllowsLocalWebOrigin() throws Exception {
+    assertPreflightAllowed("http://localhost:8081");
+    assertPreflightAllowed("http://localhost:5173");
+    assertPreflightAllowed("http://127.0.0.1:5174");
+  }
+
+  private void assertPreflightAllowed(String origin) throws Exception {
+    mockMvc
+        .perform(
+            options("/api/auth/login")
+                .header(HttpHeaders.ORIGIN, origin)
+                .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "POST")
+                .header(HttpHeaders.ACCESS_CONTROL_REQUEST_HEADERS, "content-type"))
+        .andExpect(status().isOk())
+        .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, origin))
+        .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, containsString("POST")));
+  }
 
   @Test
   void loginValidReturnsJwtAndMe() throws Exception {

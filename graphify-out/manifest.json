@@ -255,13 +255,13 @@
     "semantic_hash": "6cb125717b03670af3d53e05456c768e"
   },
   "horarios-web/package.json": {
-    "mtime": 1781821757.9111333,
-    "ast_hash": "5406177b2e83a6564b6c62ab57703c27",
+    "mtime": 1782406818.0971875,
+    "ast_hash": "31c6109066feebfcb19b148bcc421c32",
     "semantic_hash": ""
   },
   "horarios-web/src/main.tsx": {
-    "mtime": 1781821860.198408,
-    "ast_hash": "9359e2b1d158ff1baad9db0229a2a1a1",
+    "mtime": 1782407227.488376,
+    "ast_hash": "91c2254acbc71d8afac0283ea58502ea",
     "semantic_hash": ""
   },
   "horarios-web/tsconfig.json": {
@@ -270,9 +270,9 @@
     "semantic_hash": "d01228955b739b81b36922024e414840"
   },
   "horarios-web/vite.config.ts": {
-    "mtime": 1781805749.5243843,
-    "ast_hash": "aa22d7924d343aff7125786e3785aa3f",
-    "semantic_hash": "aa22d7924d343aff7125786e3785aa3f"
+    "mtime": 1781902889.3772504,
+    "ast_hash": "ebc774e9c77ae3313eaa5c03c92fb006",
+    "semantic_hash": ""
   },
   "README.md": {
     "mtime": 1781805750.6723936,
@@ -280,9 +280,9 @@
     "semantic_hash": "1be921978bdb4a2be30de0e1635eb7a3"
   },
   "horarios-api/src/main/resources/application.yml": {
-    "mtime": 1781815359.8390696,
-    "ast_hash": "1202c46b3b9b12d91d0eecd0299afa75",
-    "semantic_hash": "1202c46b3b9b12d91d0eecd0299afa75"
+    "mtime": 1781903030.7772264,
+    "ast_hash": "80182a6c413874d93c95d04e39c66773",
+    "semantic_hash": ""
   },
   "horarios-web/index.html": {
     "mtime": 1781805748.487376,
@@ -485,8 +485,8 @@
     "semantic_hash": "4e24842fd3107ae24795a228aec87e1b"
   },
   "horarios-api/src/main/java/edu/udeo/horarios/api/config/SecurityConfig.java": {
-    "mtime": 1781818930.115653,
-    "ast_hash": "fdb1bc773f4fad01d3af1bd8d5a4d388",
+    "mtime": 1781903022.5683632,
+    "ast_hash": "fc17e384383bc6fced74d14eb32c3ccd",
     "semantic_hash": ""
   },
   "horarios-api/src/test/java/edu/udeo/horarios/api/catalog/CatalogControllerTest.java": {
@@ -540,18 +540,18 @@
     "semantic_hash": ""
   },
   "horarios-api/src/main/java/edu/udeo/horarios/api/scheduling/ScheduleDtos.java": {
-    "mtime": 1781821388.3096101,
-    "ast_hash": "cdd889cbfbfaa5a60cc9e9399e3a4011",
+    "mtime": 1781887089.5132995,
+    "ast_hash": "ce494c5b09723372723fce2c5978079b",
     "semantic_hash": ""
   },
   "horarios-api/src/main/java/edu/udeo/horarios/api/scheduling/ScheduleGenerationController.java": {
-    "mtime": 1781821388.6236124,
-    "ast_hash": "6bbe8c02844efe5848153adc4534b75d",
+    "mtime": 1781886729.9443069,
+    "ast_hash": "517d7f6d3d5f505b87cda9df178789bb",
     "semantic_hash": ""
   },
   "horarios-api/src/main/java/edu/udeo/horarios/api/scheduling/ScheduleGenerationService.java": {
-    "mtime": 1781817447.683285,
-    "ast_hash": "0637fc23e5f1565f992df5e880c6e9e4",
+    "mtime": 1781887090.1022158,
+    "ast_hash": "a32a8cbe9ea10637a3071247a1edd397",
     "semantic_hash": ""
   },
   "horarios-api/src/main/java/edu/udeo/horarios/api/security/AppRole.java": {
@@ -600,13 +600,13 @@
     "semantic_hash": ""
   },
   "horarios-api/src/test/java/edu/udeo/horarios/api/scheduling/ScheduleGenerationControllerTest.java": {
-    "mtime": 1781821485.0552547,
-    "ast_hash": "3379a535b43f7a96ea0e38d2a119887f",
+    "mtime": 1781887090.4511673,
+    "ast_hash": "476a523484588ef7086cd2146cac31c3",
     "semantic_hash": ""
   },
   "horarios-api/src/test/java/edu/udeo/horarios/api/security/AuthControllerTest.java": {
-    "mtime": 1781818708.2675571,
-    "ast_hash": "0fb0adcc539e788e38349603f43b2bf5",
+    "mtime": 1781903058.7107747,
+    "ast_hash": "cf8092c87394d79e45d59eee6c75cfa7",
     "semantic_hash": ""
   },
   "horarios-api/src/main/java/edu/udeo/horarios/api/scheduling/ManualEditService.java": {
@@ -757,6 +757,136 @@
   "horarios-api/src/test/java/edu/udeo/horarios/api/reporting/ReportControllerTest.java": {
     "mtime": 1781822328.6896622,
     "ast_hash": "c90f3c77e1b8694110fe0f42cbfaa546",
+    "semantic_hash": ""
+  },
+  "horarios-api/src/main/java/edu/udeo/horarios/api/config/DataInitializer.java": {
+    "mtime": 1781823011.4321032,
+    "ast_hash": "5a70f5a680efb8f378144c2224e6cc51",
+    "semantic_hash": ""
+  },
+  "horarios-api/src/main/java/edu/udeo/horarios/api/scheduling/SubstitutionController.java": {
+    "mtime": 1781881603.7574797,
+    "ast_hash": "6690123dd26e5fb908e8ffa133faae28",
+    "semantic_hash": ""
+  },
+  "horarios-api/src/main/java/edu/udeo/horarios/api/scheduling/SubstitutionService.java": {
+    "mtime": 1781881596.2210767,
+    "ast_hash": "02860cceb4dc5170758790eac923d38c",
+    "semantic_hash": ""
+  },
+  ".github/workflows/ci.yml": {
+    "mtime": 1781882408.2086108,
+    "ast_hash": "0a6eeb6d01da728ff8f5e816cf5fa8d5",
+    "semantic_hash": ""
+  },
+  "docker-compose.yml": {
+    "mtime": 1781904369.0424612,
+    "ast_hash": "85f06a2e5562faebd72bd3c1bcfe2299",
+    "semantic_hash": ""
+  },
+  "docs/deployment-local.md": {
+    "mtime": 1781904373.98031,
+    "ast_hash": "06b0a612e691a06e662b12f137056ac1",
+    "semantic_hash": ""
+  },
+  "horarios-api/src/main/java/edu/udeo/horarios/api/scheduling/SchedulePlanController.java": {
+    "mtime": 1781887089.7992587,
+    "ast_hash": "36ed4ffd2828bed64c6f75f7dc81d41b",
+    "semantic_hash": ""
+  },
+  "docs/example.html": {
+    "mtime": 1781902085.1851492,
+    "ast_hash": "e5bf9cfdf8a7110f04671f8eb4710563",
+    "semantic_hash": ""
+  },
+  "docs/example_login.html": {
+    "mtime": 1781902679.8815594,
+    "ast_hash": "000ded6fa2e33945fc4f720a1de90423",
+    "semantic_hash": ""
+  },
+  "docs/ui-overhaul-implementation-plan.md": {
+    "mtime": 1782406429.451354,
+    "ast_hash": "16a858d192d439b6c1d968a26d9c0f5d",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/types/auth.ts": {
+    "mtime": 1782406877.2269783,
+    "ast_hash": "ff8fa12280353f9af37cc43d17d1e829",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/types/catalog.ts": {
+    "mtime": 1782406877.3549373,
+    "ast_hash": "a8fd023cd6afb1ed1ce2c9fc2f037a2c",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/types/import.ts": {
+    "mtime": 1782406877.5088878,
+    "ast_hash": "a25de26fd317c8cef099848709a26200",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/types/schedule.ts": {
+    "mtime": 1782406877.632848,
+    "ast_hash": "014f734d748d5f9ad2f4b865f5a92d05",
+    "semantic_hash": ""
+  },
+  "docs/login-regression-checklist.md": {
+    "mtime": 1782406882.7732093,
+    "ast_hash": "a3e1a9ce794699c617745221b0d79909",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/api/catalogs.ts": {
+    "mtime": 1782407092.5822082,
+    "ast_hash": "1970e6a4d5fbacbcdf7324fc59df1045",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/api/client.ts": {
+    "mtime": 1782407092.457204,
+    "ast_hash": "6b960b8e6def84824d488efc8fa4a538",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/api/imports.ts": {
+    "mtime": 1782407092.7152123,
+    "ast_hash": "2a1c11b8002a211a78e8dd88e1415d3c",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/api/schedulePlans.ts": {
+    "mtime": 1782407092.8402164,
+    "ast_hash": "25aa2b968544cf6584d9fda7eb8e93eb",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/api/substitutions.ts": {
+    "mtime": 1782407092.9952211,
+    "ast_hash": "925ec2367dbe514ff30633b47b799441",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/components/ActionButton.tsx": {
+    "mtime": 1782407107.450168,
+    "ast_hash": "377cd67ae8892b8feadae347ed90dbeb",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/components/ApiPending.tsx": {
+    "mtime": 1782407107.1536162,
+    "ast_hash": "541f58986bfa014913413d218fd0c8c8",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/components/Badge.tsx": {
+    "mtime": 1782407263.985807,
+    "ast_hash": "bc932be01b2dfdca57f4b87161fc86ad",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/components/EmptyState.tsx": {
+    "mtime": 1782407106.9812932,
+    "ast_hash": "fcad9323552726082812354f59ab296b",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/components/StatusBadge.tsx": {
+    "mtime": 1782407264.1158125,
+    "ast_hash": "e00a55aa385e7d623458682d8a0d03e2",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/components/Table.tsx": {
+    "mtime": 1782407107.3089051,
+    "ast_hash": "e9735724c54f2376435ad564f6482510",
     "semantic_hash": ""
   }
 }

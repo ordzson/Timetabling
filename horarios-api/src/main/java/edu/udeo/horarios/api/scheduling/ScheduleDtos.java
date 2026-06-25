@@ -1,8 +1,34 @@
 package edu.udeo.horarios.api.scheduling;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+
+record SchedulePlanRequest(
+    String code,
+    String name,
+    String scheduleType,
+    LocalDate startDate,
+    LocalDate endDate,
+    Map<String, Object> config) {
+  SchedulePlanRequest {
+    scheduleType = scheduleType == null || scheduleType.isBlank() ? "CLASSES" : scheduleType;
+    config = config == null ? Map.of() : Map.copyOf(config);
+  }
+}
+
+record SchedulePlanResponse(
+    long id,
+    String code,
+    String name,
+    String scheduleType,
+    String status,
+    LocalDate startDate,
+    LocalDate endDate,
+    Instant createdAt,
+    Instant updatedAt) {
+}
 
 record GenerationRequest(
     String solverMode,
@@ -44,6 +70,12 @@ record GenerationResponse(
     int unassignedCount,
     Instant startedAt,
     Instant finishedAt) {
+}
+
+record PlanTransitionRequest(Long runId, String comment) {
+}
+
+record PlanTransitionResponse(long planId, String status, Long runId) {
 }
 
 record ScoreResponse(

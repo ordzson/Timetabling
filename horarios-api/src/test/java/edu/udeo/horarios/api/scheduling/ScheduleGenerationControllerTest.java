@@ -30,6 +30,29 @@ class ScheduleGenerationControllerTest {
   @Autowired private JdbcTemplate jdbc;
 
   @Test
+  void schedulePlansCanBeCreatedAndListed() throws Exception {
+    String suffix = UUID.randomUUID().toString().substring(0, 8);
+    mockMvc
+        .perform(
+            post("/api/schedule-plans")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    """
+                    {"code":"PLAN-%s","name":"Plan %s","scheduleType":"CLASSES","startDate":"2026-01-15","endDate":"2026-06-15","config":{"defaultBlockMinutes":45}}
+                    """
+                        .formatted(suffix, suffix)))
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.code").value("PLAN-" + suffix))
+        .andExpect(jsonPath("$.status").value("DRAFT"));
+
+    mockMvc
+        .perform(get("/api/schedule-plans").param("q", "PLAN-" + suffix))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.items[0].code").value("PLAN-" + suffix))
+        .andExpect(jsonPath("$.totalItems").value(1));
+  }
+
+  @Test
   void invalidPlanValidationStoresInputErrors() throws Exception {
     Seed seed = seed(false, 35, false);
 
@@ -70,6 +93,40 @@ class ScheduleGenerationControllerTest {
         .andExpect(jsonPath("$.assignments[0].courseCode").value(seed.courseCode))
         .andExpect(jsonPath("$.assignments[0].teacherName").value("Docente " + seed.suffix))
         .andExpect(jsonPath("$.unassigned.length()").value(0));
+  }
+
+  @Test
+  void generatedPlanCanBeApprovedAndLocked() throws Exception {
+    Seed seed = seed(true, 35, false);
+
+    String response =
+        mockMvc
+            .perform(
+                post("/api/schedule-plans/" + seed.planId + "/generate")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"seed\":12345}"))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+    long runId = Long.parseLong(response.replaceAll(".*\"runId\":(\\d+).*", "$1"));
+
+    mockMvc
+        .perform(
+            post("/api/schedule-plans/" + seed.planId + "/approve")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"runId\":" + runId + "}"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.status").value("APPROVED"))
+        .andExpect(jsonPath("$.runId").value(runId));
+    assertEquals("APPROVED", planStatus(seed.planId));
+
+    mockMvc
+        .perform(post("/api/schedule-plans/" + seed.planId + "/lock").contentType(MediaType.APPLICATION_JSON).content("{}"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.status").value("LOCKED"))
+        .andExpect(jsonPath("$.runId").value(runId));
+    assertEquals("LOCKED", planStatus(seed.planId));
   }
 
   @Test

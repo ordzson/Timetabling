@@ -7,7 +7,7 @@ RUN pnpm install --frozen-lockfile
 
 COPY index.html tsconfig.json vite.config.ts ./
 COPY src src
-ARG VITE_API_BASE=http://localhost:8080
+ARG VITE_API_BASE=
 ENV VITE_API_BASE=$VITE_API_BASE
 RUN pnpm run build
 

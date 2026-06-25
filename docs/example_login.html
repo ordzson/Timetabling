@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>EduPaper Admin - Iniciar Sesión</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&amp;family=Work+Sans:wght@400;500&amp;family=Space+Grotesk:wght@700&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-yellow": "#785a00",
+                        "paper-cream": "#fff9ec",
+                        "secondary-container": "#9eecf6",
+                        "inverse-primary": "#ffb0ce",
+                        "surface-container-highest": "#f1dee2",
+                        "sky-blue": "#90eefb",
+                        "on-error": "#ffffff",
+                        "tertiary-container": "#785a00",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#23191c",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#23191c",
+                        "background": "#fff8f8",
+                        "primary": "#841a52",
+                        "tertiary-fixed": "#ffdf9b",
+                        "outline-variant": "#dac0c8",
+                        "surface-variant": "#f1dee2",
+                        "surface-container-low": "#fff0f3",
+                        "surface-tint": "#a3346a",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#251a00",
+                        "on-secondary-container": "#0c6d76",
+                        "surface": "#fff8f8",
+                        "on-primary-container": "#ffcbdc",
+                        "surface-container-high": "#f7e3e8",
+                        "surface-dim": "#e8d5da",
+                        "primary-fixed": "#ffd9e5",
+                        "paper-shadow": "#1d1c14",
+                        "secondary": "#006972",
+                        "ink-dark": "#1d1c14",
+                        "mint-green": "#006d77",
+                        "on-tertiary-fixed-variant": "#5b4300",
+                        "surface-bright": "#fff8f8",
+                        "secondary-fixed-dim": "#85d3dd",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#5b4300",
+                        "on-primary-fixed": "#3e0022",
+                        "primary-fixed-dim": "#ffb0ce",
+                        "on-primary-fixed-variant": "#841a52",
+                        "on-tertiary-container": "#fdd475",
+                        "on-surface-variant": "#554248",
+                        "tertiary-fixed-dim": "#eac165",
+                        "inverse-surface": "#392d31",
+                        "surface-container": "#fde9ee",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed-variant": "#004f56",
+                        "on-secondary-fixed": "#001f23",
+                        "outline": "#887178",
+                        "inverse-on-surface": "#ffecf1",
+                        "primary-container": "#a3346a",
+                        "secondary-fixed": "#a1eff9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "xs": "8px",
+                        "md": "24px",
+                        "xl": "64px",
+                        "lg": "40px",
+                        "margin-safe": "24px",
+                        "sm": "16px",
+                        "gutter": "20px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Work Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-sm": ["Work Sans"],
+                        "label-caps": ["Space Grotesk"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "body-lg": ["Work Sans"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", { "lineHeight": "1.5", "fontWeight": "500" }],
+                        "headline-xl": ["40px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-md": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                        "body-sm": ["12px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "500" }]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .paper-dot-pattern {
+            background-image: radial-gradient(#dac0c8 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        .sticker-rotate {
+            transform: rotate(-3deg);
+        }
+
+        .btn-press:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px 0px rgba(29, 28, 20, 1) !important;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(-3deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(-1deg);
+            }
+
+            100% {
+                transform: translateY(0px) rotate(-3deg);
+            }
+        }
+
+        .floating-sticker {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-surface-dim font-body-md text-on-surface min-h-screen flex items-center justify-center p-md paper-dot-pattern overflow-hidden">
+    <!-- Decorative Top Row Stickers -->
+    <div class="fixed top-12 left-12 hidden lg:block floating-sticker">
+        <div
+            class="bg-sky-blue border-3 border-ink-dark px-sm py-xs shadow-[4px_4px_0px_0px_rgba(29,28,20,1)] flex items-center gap-xs">
+            <span class="material-symbols-outlined text-ink-dark" data-icon="auto_awesome">auto_awesome</span>
+            <span class="font-label-caps text-label-caps text-ink-dark">PAPER-CUT V3</span>
+        </div>
+    </div>
+    <!-- Main Login Container (The Sheet) -->
+    <main class="relative z-10 w-full max-w-md">
+        <!-- The Main Paper Sheet -->
+        <div
+            class="bg-paper-cream border-3 border-ink-dark p-lg shadow-[8px_8px_0px_0px_rgba(29,28,20,1)] relative overflow-hidden">
+            <!-- Ruled Line Accent (Top) -->
+            <div class="absolute top-0 left-0 w-full h-1 bg-ink-dark opacity-10"></div>
+            <!-- Security Seal Sticker -->
+            <div class="absolute -top-2 -right-4 sticker-rotate z-20">
+                <div class="bg-tertiary-yellow border-3 border-ink-dark p-xs shadow-[4px_4px_0px_0px_rgba(29,28,20,1)]">
+                    <div class="border border-on-tertiary border-dashed p-1 flex flex-col items-center">
+                        <span class="material-symbols-outlined text-on-tertiary text-lg" data-icon="verified_user"
+                            style="font-variation-settings: 'FILL' 1;">verified_user</span>
+                        <span class="font-label-caps text-label-caps text-on-tertiary mt-1">V3.4 STABLE</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Branding -->
+            <header class="mb-lg">
+                <h1 class="font-headline-lg text-headline-lg text-ink-dark leading-none mb-xs">
+                    EduPaper Admin
+                </h1>
+                <p class="font-body-lg text-body-lg text-on-surface-variant italic">
+                    Portal de Agenda Académica
+                </p>
+            </header>
+            <!-- Login Form -->
+            <form action="#" class="space-y-lg" method="POST" onsubmit="event.preventDefault();">
+                <!-- Admin ID Field -->
+                <div class="space-y-xs">
+                    <label class="font-label-caps text-label-caps text-ink-dark uppercase block" for="admin-id">
+                        ID de Administrador
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-sm flex items-center pointer-events-none">
+                            <span class="material-symbols-outlined text-on-surface-variant text-md"
+                                data-icon="badge">badge</span>
+                        </div>
+                        <input
+                            class="w-full bg-surface-container border-3 border-ink-dark py-sm pl-xl pr-md font-body-md text-ink-dark focus:ring-0 focus:border-primary transition-colors placeholder:text-on-surface-variant/40"
+                            id="admin-id" name="admin-id" placeholder="ADM-000-000" type="text">
+                    </div>
+                </div>
+                <!-- Access Key Field -->
+                <div class="space-y-xs">
+                    <label class="font-label-caps text-label-caps text-ink-dark uppercase block" for="access-key">
+                        Clave de Acceso
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-sm flex items-center pointer-events-none">
+                            <span class="material-symbols-outlined text-on-surface-variant text-md" data-icon="lock"
+                                style="font-variation-settings: 'FILL' 1;">lock</span>
+                        </div>
+                        <input
+                            class="w-full bg-surface-container border-3 border-ink-dark py-sm pl-xl pr-md font-body-md text-ink-dark focus:ring-0 focus:border-primary transition-colors placeholder:text-on-surface-variant/40"
+                            id="access-key" name="access-key" placeholder="••••••••••••" type="password">
+                    </div>
+                </div>
+                <!-- Login Button -->
+                <div class="pt-xs">
+                    <button
+                        class="btn-press w-full bg-primary py-sm px-md border-3 border-ink-dark shadow-[4px_4px_0px_0px_rgba(29,28,20,1)] flex items-center justify-center gap-xs transition-all"
+                        type="submit">
+                        <span class="font-headline-md text-headline-md text-on-primary">Iniciar Sesión</span>
+                        <span class="material-symbols-outlined text-on-primary"
+                            data-icon="arrow_forward">arrow_forward</span>
+                    </button>
+                </div>
+            </form>
+            <!-- Footer Links -->
+            <footer
+                class="mt-lg flex flex-col sm:flex-row items-center justify-between gap-md border-t border-ink-dark/10 pt-md">
+                <a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors underline decoration-2 underline-offset-4"
+                    href="#">
+                    ¿Olvidaste tu contraseña?
+                </a>
+                <div
+                    class="bg-secondary-fixed border-ink-dark px-xs py-1 sticker-rotate-alt -rotate-1 border-3 shadow-[4px_4px_0px_0px_rgba(29,28,20,1)]">
+                    <span class="font-label-caps text-label-caps text-on-secondary-fixed">ADMIN ACCESS ONLY</span>
+                </div>
+            </footer>
+        </div>
+        <!-- Desktop Accessory: Paper Clip Sticker -->
+        <div class="absolute bottom-4 left-4 hidden lg:block sticker-rotate z-20">
+            <div
+                class="bg-surface-container-highest border-3 border-ink-dark p-sm shadow-[4px_4px_0px_0px_rgba(29,28,20,1)]">
+                <span class="material-symbols-outlined text-primary text-2xl" data-icon="attach_file">attach_file</span>
+            </div>
+        </div>
+    </main>
+    <!-- Background Illustration Elements -->
+    <div class="fixed bottom-0 right-0 p-lg opacity-20 pointer-events-none hidden lg:block">
+        <div class="relative w-64 h-64">
+            <!-- Bottom Note -->
+            <div
+                class="absolute inset-0 bg-paper-cream border-3 border-ink-dark rotate-6 shadow-[8px_8px_0px_0px_rgba(29,28,20,1)] flex items-center justify-center">
+                <div class="w-full h-full paper-dot-pattern opacity-20"></div>
+            </div>
+            <!-- Top Note -->
+            <div
+                class="absolute inset-0 bg-sky-blue border-3 border-ink-dark -rotate-3 shadow-[4px_4px_0px_0px_rgba(29,28,20,1)] p-md">
+                <div class="space-y-xs">
+                    <div class="h-1 bg-ink-dark/20 w-3/4"></div>
+                    <div class="h-1 bg-ink-dark/20 w-1/2"></div>
+                    <div class="h-1 bg-ink-dark/20 w-2/3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Micro-interaction for inputs -->
+    <script>
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.parentElement.classList.add('translate-x-1', 'translate-y-1');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.parentElement.classList.remove('translate-x-1', 'translate-y-1');
+            });
+        });
+    </script>
+
+
+</body>
+
+</html>

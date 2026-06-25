@@ -2,6 +2,18 @@ import React, { FormEvent, useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { CSS } from '@dnd-kit/utilities';
 import {
+  BookOpen,
+  CalendarDays,
+  Clock,
+  FileSpreadsheet,
+  GraduationCap,
+  LayoutDashboard,
+  LogOut,
+  MapPinned,
+  PanelLeft,
+  Users,
+} from 'lucide-react';
+import {
   DndContext,
   DragEndEvent,
   DragOverlay,
@@ -12,193 +24,45 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import './styles.css';
+import type { Session } from './types/auth';
+import type { AdminView, Catalog, Field, PageResponse } from './types/catalog';
+import type { ImportErrorRow, ImportResponse } from './types/import';
+import type {
+  Assignment,
+  GenerationResponse,
+  GridView,
+  ManualDraft,
+  ManualEditResponse,
+  PlanStatus,
+  SchedulePlanSummary,
+  ScheduleResult,
+  SubstitutionDraft,
+  SubstitutionResponse,
+  ValidationIssue,
+  ValidationResponse,
+  Violation,
+} from './types/schedule';
+import { api } from './api/client';
+import { createCatalogItem, listCatalog } from './api/catalogs';
+import { importAcademicData, listImportErrors } from './api/imports';
+import {
+  approveSchedulePlan,
+  generateSchedulePlan,
+  getScheduleResult,
+  listSchedulePlans,
+  listScheduleViolations,
+  lockSchedulePlan,
+  submitManualScheduleEdit,
+  validateSchedulePlan,
+} from './api/schedulePlans';
+import { createSubstitution as postSubstitution, listSubstitutions } from './api/substitutions';
+import { ActionButton } from './components/ActionButton';
+import { ApiPending } from './components/ApiPending';
+import { Badge } from './components/Badge';
+import { EmptyState } from './components/EmptyState';
+import { StatusBadge } from './components/StatusBadge';
+import { Table } from './components/Table';
 
-type Role = 'SUPERADMIN' | 'ADMIN' | 'TEACHER' | 'STUDENT';
-
-type User = {
-  id: number;
-  email: string;
-  fullName: string;
-  role: Role;
-  active: boolean;
-};
-
-type Session = {
-  accessToken: string;
-  user: User;
-};
-
-type PageResponse<T = Record<string, unknown>> = {
-  items: T[];
-  page: number;
-  size: number;
-  totalItems: number;
-  totalPages: number;
-};
-
-type ApiError = {
-  code?: string;
-  message?: string;
-  details?: { fields?: { field: string; message: string }[] };
-};
-
-type Field =
-  | { name: string; label: string; type: 'text' | 'number' | 'time'; required?: boolean }
-  | { name: string; label: string; type: 'checkbox' }
-  | { name: string; label: string; type: 'select'; options: string[] };
-
-type Catalog = {
-  resource: string;
-  title: string;
-  fields: Field[];
-  columns: string[];
-};
-
-type AdminView = 'catalogs' | 'import' | 'plans';
-
-type ImportSummary = {
-  rowsRead: number;
-  rowsValid: number;
-  rowsInvalid: number;
-};
-
-type ImportResponse = {
-  importBatchId: number;
-  status: string;
-  filename: string;
-  summary: ImportSummary;
-  errorCount: number;
-};
-
-type ImportErrorRow = {
-  id: number;
-  sheetName: string;
-  rowNumber: number;
-  columnName: string;
-  rawValue: string;
-  code: string;
-  message?: string;
-  suggestedAction?: string;
-};
-
-type ValidationIssue = {
-  id: number;
-  severity: string;
-  code: string;
-  entityType: string;
-  entityId: number;
-  message: string;
-  suggestedAction?: string;
-};
-
-type ValidationResponse = {
-  planId: number;
-  status: PlanStatus;
-  hasBlockingErrors: boolean;
-  issues: ValidationIssue[];
-};
-
-type PlanStatus =
-  | 'DRAFT'
-  | 'VALIDATING'
-  | 'INVALID_INPUT'
-  | 'GENERATING'
-  | 'GENERATED'
-  | 'GENERATED_WITH_CONFLICTS'
-  | 'APPROVED'
-  | 'LOCKED'
-  | 'ARCHIVED';
-
-type GenerationResponse = {
-  planId: number;
-  runId: number;
-  status: string;
-  planStatus: PlanStatus;
-  seed: number;
-  engineVersion: string;
-  assignedCount: number;
-  unassignedCount: number;
-  score?: Record<string, number>;
-};
-
-type Violation = {
-  id: number;
-  severity: string;
-  code: string;
-  message: string;
-  cost?: number;
-};
-
-type Assignment = {
-  id: number;
-  sessionId: number;
-  courseId: number;
-  courseCode: string;
-  courseName: string;
-  teacherId: number;
-  teacherName: string;
-  roomId: number;
-  roomCode: string;
-  cohortIds: number[];
-  dayOfWeek: number;
-  startBlock: number;
-  durationBlocks: number;
-  status: string;
-  pinned: boolean;
-};
-
-type ScheduleResult = {
-  planId: number;
-  runId: number;
-  planStatus: PlanStatus;
-  score?: Record<string, number>;
-  assignments: Assignment[];
-  unassigned: Assignment[];
-};
-
-type ManualEditResponse = {
-  status: string;
-  resultRunId: number;
-  pinnedSessionIds: number[];
-  movedSessionIds: number[];
-  remainingViolations: Violation[];
-  scoreBefore: number;
-  scoreAfter: number;
-  repairTimeMs: number;
-};
-
-type SubstitutionResponse = {
-  id: number;
-  assignmentId: number;
-  originalTeacherId: number;
-  substituteTeacherId: number;
-  startsAt: string;
-  endsAt?: string | null;
-  isPermanent: boolean;
-  reason?: string | null;
-};
-
-type GridView = 'cohort' | 'teacher' | 'room';
-
-type SubstitutionDraft = {
-  assignmentId: string;
-  substituteTeacherId: string;
-  startsAt: string;
-  endsAt: string;
-  isPermanent: boolean;
-  reason: string;
-};
-
-type ManualDraft = {
-  assignment: Assignment;
-  targetDay: number;
-  targetStartBlock: number;
-  targetTimeBlockId: string;
-  targetTeacherId: string;
-  targetRoomId: string;
-};
-
-const API_BASE = ((import.meta as ImportMeta & { env?: Record<string, string> }).env?.VITE_API_BASE) ?? '';
 const SESSION_KEY = 'horarios.session';
 
 const CATALOGS: Catalog[] = [
@@ -206,7 +70,6 @@ const CATALOGS: Catalog[] = [
     resource: 'careers',
     title: 'Carreras',
     fields: [
-      { name: 'code', label: 'Codigo', type: 'text', required: true },
       { name: 'name', label: 'Nombre', type: 'text', required: true },
       { name: 'active', label: 'Activa', type: 'checkbox' },
     ],
@@ -216,7 +79,6 @@ const CATALOGS: Catalog[] = [
     resource: 'courses',
     title: 'Cursos',
     fields: [
-      { name: 'code', label: 'Codigo', type: 'text', required: true },
       { name: 'name', label: 'Nombre', type: 'text', required: true },
       { name: 'requiresLab', label: 'Requiere lab', type: 'checkbox' },
       { name: 'weeklyBlocksMin', label: 'Bloques min', type: 'number', required: true },
@@ -228,7 +90,6 @@ const CATALOGS: Catalog[] = [
     resource: 'teachers',
     title: 'Docentes',
     fields: [
-      { name: 'code', label: 'Codigo', type: 'text', required: true },
       { name: 'fullName', label: 'Nombre completo', type: 'text', required: true },
       { name: 'priority', label: 'Prioridad', type: 'number', required: true },
       { name: 'minCourses', label: 'Cursos min', type: 'number', required: true },
@@ -241,7 +102,6 @@ const CATALOGS: Catalog[] = [
     resource: 'rooms',
     title: 'Aulas',
     fields: [
-      { name: 'code', label: 'Codigo', type: 'text', required: true },
       { name: 'capacity', label: 'Capacidad', type: 'number', required: true },
       { name: 'type', label: 'Tipo', type: 'select', options: ['THEORY', 'LAB', 'MIXED'] },
       { name: 'floor', label: 'Nivel', type: 'number', required: true },
@@ -254,7 +114,6 @@ const CATALOGS: Catalog[] = [
     resource: 'journeys',
     title: 'Jornadas',
     fields: [
-      { name: 'code', label: 'Codigo', type: 'text', required: true },
       { name: 'name', label: 'Nombre', type: 'text', required: true },
       { name: 'blockMinutes', label: 'Minutos bloque', type: 'number', required: true },
       { name: 'startTime', label: 'Inicio', type: 'time', required: true },
@@ -262,6 +121,18 @@ const CATALOGS: Catalog[] = [
     ],
     columns: ['code', 'name', 'blockMinutes', 'startTime', 'endTime'],
   },
+];
+
+const NAV_ITEMS: { view: AdminView; label: string; icon: React.ElementType; resource?: string }[] = [
+  { view: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { view: 'academia', label: 'Academia', icon: GraduationCap },
+  { view: 'teachers', label: 'Docentes', icon: Users, resource: 'teachers' },
+  { view: 'time', label: 'Tiempo', icon: Clock, resource: 'journeys' },
+  { view: 'rooms', label: 'Espacios', icon: MapPinned, resource: 'rooms' },
+  { view: 'import', label: 'Importacion', icon: FileSpreadsheet },
+  { view: 'plans', label: 'Planes', icon: CalendarDays },
+  { view: 'availability', label: 'Disponibilidad', icon: PanelLeft },
+  { view: 'reports', label: 'Reportes', icon: BookOpen },
 ];
 
 function defaultValues(catalog: Catalog): Record<string, unknown> {
@@ -273,48 +144,9 @@ function defaultValues(catalog: Catalog): Record<string, unknown> {
   );
 }
 
-async function api<T>(path: string, init: RequestInit = {}, token?: string): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, {
-    ...init,
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...init.headers,
-    },
-  });
-  const body = response.status === 204 ? null : await response.json().catch(() => null);
-  if (!response.ok) {
-    const error = (body ?? {}) as ApiError;
-    throw new Error(formatApiError(error, response.status));
-  }
-  return body as T;
-}
-
-async function apiForm<T>(path: string, form: FormData, token: string): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: form,
-  });
-  const body = response.status === 204 ? null : await response.json().catch(() => null);
-  if (!response.ok) {
-    const error = (body ?? {}) as ApiError;
-    throw new Error(formatApiError(error, response.status));
-  }
-  return body as T;
-}
-
-function formatApiError(error: ApiError, status: number) {
-  const fieldErrors = error.details?.fields?.map((field) => `${field.field}: ${field.message}`).join(' ');
-  return [error.code, error.message, fieldErrors].filter(Boolean).join(' - ') || `HTTP ${status}`;
-}
-
 function normalizePayload(catalog: Catalog, values: Record<string, unknown>) {
   const payload: Record<string, unknown> = {};
+  payload.code = crypto.randomUUID();
   for (const field of catalog.fields) {
     const value = values[field.name];
     if (field.type === 'number') {
@@ -383,34 +215,99 @@ function Login({ onLogin }: { onLogin: (session: Session) => void }) {
 
   return (
     <main className="login-page">
+      <div className="login-sticker" aria-hidden="true">
+        PAPER-CUT V3
+      </div>
       <form className="login-panel" onSubmit={submit}>
-        <p className="eyebrow">Sistema de Generacion de Horarios</p>
-        <h1>Administracion</h1>
-        <label>
-          Correo
-          <input value={email} onChange={(event) => setEmail(event.target.value)} type="email" required />
+        <div className="login-seal" aria-hidden="true">
+          <strong>OK</strong>
+          <span>JWT</span>
+        </div>
+        <header className="login-header">
+          <h1>Horarios UdeO/UTP</h1>
+          <p>Portal de Agenda Academica</p>
+        </header>
+        <label className="login-field">
+          Correo institucional
+          <span>
+            <b aria-hidden="true">@</b>
+            <input
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              type="email"
+              placeholder="admin@udeo.edu.gt"
+              required
+            />
+          </span>
         </label>
-        <label>
-          Password
-          <input value={password} onChange={(event) => setPassword(event.target.value)} type="password" required />
+        <label className="login-field">
+          Clave de acceso
+          <span>
+            <b aria-hidden="true">#</b>
+            <input
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              type="password"
+              placeholder="************"
+              required
+            />
+          </span>
         </label>
         {error ? <ErrorBox message={error} /> : null}
-        <button type="submit" disabled={loading}>
-          {loading ? 'Ingresando...' : 'Ingresar'}
+        <button className="login-submit" type="submit" disabled={loading}>
+          <span>{loading ? 'Ingresando...' : 'Iniciar sesion'}</span>
+          <span aria-hidden="true">-&gt;</span>
         </button>
+        <footer className="login-footer">
+          <a href="mailto:soporte@udeo.edu.gt">Soporte de acceso</a>
+          <strong>ADMIN ACCESS ONLY</strong>
+        </footer>
       </form>
+      <div className="login-notes" aria-hidden="true">
+        <span />
+        <span />
+      </div>
     </main>
   );
 }
 
 function AdminShell({ session, onLogout }: { session: Session; onLogout: () => void }) {
   const canManageCatalogs = session.user.role === 'ADMIN' || session.user.role === 'SUPERADMIN';
-  const [view, setView] = useState<AdminView>('catalogs');
+  const [view, setView] = useState<AdminView>('dashboard');
   const [activeResource, setActiveResource] = useState(CATALOGS[0].resource);
+  const [topPlan, setTopPlan] = useState<SchedulePlanSummary | null>(null);
   const catalog = useMemo(
     () => CATALOGS.find((item) => item.resource === activeResource) ?? CATALOGS[0],
     [activeResource],
   );
+
+  useEffect(() => {
+    if (!canManageCatalogs) {
+      return;
+    }
+    let ignore = false;
+    listSchedulePlans('page=0&size=1', session.accessToken)
+      .then((data) => {
+        if (!ignore) {
+          setTopPlan(data.items[0] ?? null);
+        }
+      })
+      .catch(() => {
+        if (!ignore) {
+          setTopPlan(null);
+        }
+      });
+    return () => {
+      ignore = true;
+    };
+  }, [canManageCatalogs, session.accessToken]);
+
+  function openView(item: (typeof NAV_ITEMS)[number]) {
+    setView(item.view);
+    if (item.resource) {
+      setActiveResource(item.resource);
+    }
+  }
 
   return (
     <main className="admin-shell">
@@ -420,47 +317,67 @@ function AdminShell({ session, onLogout }: { session: Session; onLogout: () => v
           <h1>Administracion</h1>
         </div>
         <nav aria-label="Modulos">
-          {[
-            ['catalogs', 'Catalogos'],
-            ['import', 'Importar'],
-            ['plans', 'Planes'],
-          ].map(([key, label]) => (
+          {NAV_ITEMS.map((item) => {
+            const Icon = item.icon;
+            return (
             <button
-              className={view === key ? 'active' : ''}
-              key={key}
-              onClick={() => setView(key as AdminView)}
+              className={view === item.view ? 'active' : ''}
+              key={item.view}
+              onClick={() => openView(item)}
               type="button"
-              disabled={!canManageCatalogs}
+              disabled={!canManageCatalogs && item.view !== 'availability'}
             >
-              {label}
+              <Icon aria-hidden="true" size={18} />
+              <span>{item.label}</span>
             </button>
-          ))}
+            );
+          })}
         </nav>
-        {view === 'catalogs' ? <nav aria-label="Catalogos">
-          {CATALOGS.map((item) => (
-            <button
-              className={item.resource === activeResource ? 'active' : ''}
-              key={item.resource}
-              onClick={() => setActiveResource(item.resource)}
-              type="button"
-              disabled={!canManageCatalogs}
-            >
-              {item.title}
-            </button>
-          ))}
-        </nav> : null}
       </aside>
       <section className="content">
         <header className="topbar">
-          <div>
-            <strong>{session.user.fullName}</strong>
-            <span>{session.user.role}</span>
+          <div className="topbar-main">
+            <div>
+              <strong>{session.user.fullName}</strong>
+              <span>{session.user.role}</span>
+            </div>
+            {topPlan ? (
+              <div className="topbar-plan">
+                <span>Plan activo</span>
+                <strong>{topPlan.name}</strong>
+                <StatusBadge status={topPlan.status} />
+              </div>
+            ) : null}
           </div>
-          <button className="ghost" onClick={onLogout} type="button">
-            Salir
-          </button>
+          <div className="topbar-actions">
+            <button className="ghost" onClick={() => setView('plans')} type="button" disabled={!canManageCatalogs}>
+              Planes
+            </button>
+            <button className="ghost" onClick={() => setView('import')} type="button" disabled={!canManageCatalogs}>
+              Importar
+            </button>
+            <button className="ghost icon-button" onClick={onLogout} type="button" aria-label="Salir">
+              <LogOut aria-hidden="true" size={18} />
+            </button>
+          </div>
         </header>
-        {canManageCatalogs && view === 'catalogs' ? (
+        {canManageCatalogs && view === 'dashboard' ? (
+          <DashboardHome
+            onOpenAcademia={() => setView('academia')}
+            onOpenPlans={() => setView('plans')}
+            token={session.accessToken}
+          />
+        ) : null}
+        {canManageCatalogs && view === 'academia' ? (
+          <AcademiaPage token={session.accessToken} />
+        ) : null}
+        {canManageCatalogs && view === 'teachers' ? (
+          <TeachersPage token={session.accessToken} />
+        ) : null}
+        {canManageCatalogs && view === 'time' ? (
+          <TimePage token={session.accessToken} />
+        ) : null}
+        {canManageCatalogs && view === 'rooms' ? (
           <CatalogPage catalog={catalog} token={session.accessToken} />
         ) : null}
         {canManageCatalogs && view === 'import' ? (
@@ -469,15 +386,663 @@ function AdminShell({ session, onLogout }: { session: Session; onLogout: () => v
         {canManageCatalogs && view === 'plans' ? (
           <SchedulePlanPage token={session.accessToken} />
         ) : null}
-        {!canManageCatalogs ? (
-          <div className="empty-state">
-            <h2>Rol sin acceso administrativo</h2>
-            <p>Tu rol puede iniciar sesion, pero no administrar catalogos, importaciones ni planes.</p>
-          </div>
+        {view === 'availability' ? (
+          <AvailabilityPage role={session.user.role} token={session.accessToken} />
+        ) : null}
+        {canManageCatalogs && view === 'reports' ? (
+          <EmptyState title="API pendiente">
+            Esta vista queda bloqueada hasta conectar endpoints administrativos reales.
+          </EmptyState>
+        ) : null}
+        {!canManageCatalogs && view !== 'availability' ? (
+          <EmptyState title="Rol sin acceso administrativo">
+            Tu rol puede iniciar sesion, pero no administrar catalogos, importaciones ni planes.
+          </EmptyState>
         ) : null}
       </section>
     </main>
   );
+}
+
+function DashboardHome({
+  onOpenAcademia,
+  onOpenPlans,
+  token,
+}: {
+  onOpenAcademia: () => void;
+  onOpenPlans: () => void;
+  token: string;
+}) {
+  const [catalogCounts, setCatalogCounts] = useState<Record<string, number>>({});
+  const [plans, setPlans] = useState<PageResponse<SchedulePlanSummary> | null>(null);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+  const latestPlan = plans?.items[0];
+  const hasCatalogCounts = Object.keys(catalogCounts).length > 0;
+
+  useEffect(() => {
+    let ignore = false;
+    async function loadDashboard() {
+      setError('');
+      setLoading(true);
+      const catalogResults = await Promise.allSettled(
+        CATALOGS.map(async (catalog) => {
+          const data = await listCatalog(catalog.resource, 'page=0&size=1', token);
+          return [catalog.resource, data.totalItems] as const;
+        }),
+      );
+      const planResult = await Promise.allSettled([
+        listSchedulePlans('page=0&size=5', token),
+      ]);
+      if (ignore) {
+        return;
+      }
+      setCatalogCounts(
+        Object.fromEntries(
+          catalogResults
+            .filter((result): result is PromiseFulfilledResult<readonly [string, number]> => result.status === 'fulfilled')
+            .map((result) => result.value),
+        ),
+      );
+      if (planResult[0]?.status === 'fulfilled') {
+        setPlans(planResult[0].value);
+      }
+      const failures = [
+        ...catalogResults.filter((result) => result.status === 'rejected'),
+        ...planResult.filter((result) => result.status === 'rejected'),
+      ];
+      if (failures.length) {
+        setError(`No se pudo cargar ${failures.length} dato(s) reales del inicio.`);
+      }
+      setLoading(false);
+    }
+    void loadDashboard();
+    return () => {
+      ignore = true;
+    };
+  }, [token]);
+
+  return (
+    <div className="dashboard-page">
+      <section className="dashboard-hero">
+        <div className="hero-copy">
+          <p className="eyebrow">Plan mas reciente</p>
+          <h2>{latestPlan ? latestPlan.name : loading ? 'Cargando planes...' : 'Sin planes creados'}</h2>
+          <p>{latestPlan ? `${latestPlan.code} · ${latestPlan.startDate} a ${latestPlan.endDate}` : 'No hay un plan real para mostrar todavia.'}</p>
+        </div>
+        <div className="hero-actions" aria-label="Acciones principales">
+          <ActionButton type="button" onClick={onOpenPlans}>Abrir planes</ActionButton>
+          <ActionButton className="ghost" type="button" onClick={onOpenAcademia}>Revisar academia</ActionButton>
+        </div>
+      </section>
+
+      {error ? <ErrorBox message={error} /> : null}
+
+      <section className="dashboard-metrics" aria-label="Resumen operativo">
+        <Metric label="Planes" value={plans?.totalItems ?? (loading ? '...' : 'Sin dato')} />
+        <Metric label="Carreras" value={catalogCounts.careers ?? (loading ? '...' : 'Sin dato')} />
+        <Metric label="Cursos" value={catalogCounts.courses ?? (loading ? '...' : 'Sin dato')} />
+        <Metric label="Docentes" value={catalogCounts.teachers ?? (loading ? '...' : 'Sin dato')} />
+        <Metric label="Aulas" value={catalogCounts.rooms ?? (loading ? '...' : 'Sin dato')} />
+        <Metric label="Jornadas" value={catalogCounts.journeys ?? (loading ? '...' : 'Sin dato')} />
+      </section>
+
+      <section className="dashboard-board">
+        <div className="schedule-preview">
+          <div className="section-title">
+            <h2>Planes reales</h2>
+            {latestPlan ? <StatusBadge status={latestPlan.status} /> : null}
+          </div>
+          {plans?.items.length ? (
+            <Table flat>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Codigo</th>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                    <th>Rango</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {plans.items.map((plan) => (
+                    <tr key={plan.id}>
+                      <td>{plan.code}</td>
+                      <td>{plan.name}</td>
+                      <td>{plan.scheduleType}</td>
+                      <td><StatusBadge status={plan.status} /></td>
+                      <td>{plan.startDate} - {plan.endDate}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Table>
+          ) : (
+            <EmptyState title={loading ? 'Cargando planes' : 'Sin planes'}>
+              {loading ? 'Consultando /api/schedule-plans.' : 'Crea un plan para poblar esta seccion con informacion real.'}
+            </EmptyState>
+          )}
+        </div>
+
+        <aside className="dashboard-side">
+          <div className="conflict-list suggestion">
+            <h3>Datos reales disponibles</h3>
+            <p>{hasCatalogCounts ? 'Conteos de catalogos y lista de planes.' : 'Esperando respuesta de catalogos.'}</p>
+          </div>
+          <div className="conflict-list suggestion">
+            <h3>Datos faltantes</h3>
+            <ApiPending>Resumen global de asignaciones, conflictos y sesiones sin asignar.</ApiPending>
+          </div>
+        </aside>
+      </section>
+
+      <Table>
+        <table>
+          <thead>
+            <tr>
+              <th>Catalogo</th>
+              <th>Endpoint</th>
+              <th>Total real</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {CATALOGS.map((catalog) => (
+              <tr key={catalog.resource}>
+                <td>{catalog.title}</td>
+                <td>/api/catalog/{catalog.resource}</td>
+                <td>{catalogCounts[catalog.resource] ?? (loading ? '...' : 'Sin dato')}</td>
+                <td>{catalogCounts[catalog.resource] === undefined ? 'No cargado' : 'Cargado'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Table>
+    </div>
+  );
+}
+
+function AcademiaPage({ token }: { token: string }) {
+  const [careers, setCareers] = useState<PageResponse>({ items: [], page: 0, size: 50, totalItems: 0, totalPages: 0 });
+  const [courses, setCourses] = useState<PageResponse>({ items: [], page: 0, size: 50, totalItems: 0, totalPages: 0 });
+  const [selectedCareer, setSelectedCareer] = useState('');
+  const [pending, setPending] = useState<Record<string, string>>({});
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+  const selectedCareerName = String(
+    careers.items.find((item) => String(item.id ?? item.code) === selectedCareer)?.name ?? 'Carrera sin seleccionar',
+  );
+
+  useEffect(() => {
+    let ignore = false;
+    async function loadAcademia() {
+      setError('');
+      setPending({});
+      setLoading(true);
+      const [careerResult, courseResult, curriculaResult, matrixResult, cohortResult] = await Promise.allSettled([
+        listCatalog('careers', 'page=0&size=100&sort=code,asc', token),
+        listCatalog('courses', 'page=0&size=100&sort=code,asc', token),
+        listCatalog('curricula', 'page=0&size=20', token),
+        listCatalog('curriculum-courses', 'page=0&size=20', token),
+        listCatalog('cohorts', 'page=0&size=20', token),
+      ]);
+      if (ignore) {
+        return;
+      }
+      if (careerResult.status === 'fulfilled') {
+        setCareers(careerResult.value);
+        setSelectedCareer((current) => current || String(careerResult.value.items[0]?.id ?? careerResult.value.items[0]?.code ?? ''));
+      } else {
+        setError(careerResult.reason instanceof Error ? careerResult.reason.message : 'Error cargando carreras.');
+      }
+      if (courseResult.status === 'fulfilled') {
+        setCourses(courseResult.value);
+      }
+      setPending({
+        ...(courseResult.status === 'rejected' ? { courses: 'Catalogo base de cursos no cargo.' } : {}),
+        ...(curriculaResult.status === 'rejected' ? { curricula: 'GET /api/catalog/curricula no disponible.' } : {}),
+        ...(matrixResult.status === 'rejected' ? { curriculumCourses: 'GET /api/catalog/curriculum-courses no disponible.' } : {}),
+        ...(cohortResult.status === 'rejected' ? { cohorts: 'GET /api/catalog/cohorts no disponible.' } : {}),
+      });
+      setLoading(false);
+    }
+    void loadAcademia();
+    return () => {
+      ignore = true;
+    };
+  }, [token]);
+
+  return (
+    <div className="academia-page">
+      <section className="form-panel">
+        <p className="eyebrow">Academia</p>
+        <h2>Carrera</h2>
+        <label>
+          Carrera base
+          <select value={selectedCareer} onChange={(event) => setSelectedCareer(event.target.value)} disabled={!careers.items.length}>
+            {careers.items.map((career) => (
+              <option key={String(career.id ?? career.code)} value={String(career.id ?? career.code)}>
+                {String(career.code ?? '')} {String(career.name ?? '')}
+              </option>
+            ))}
+          </select>
+        </label>
+        <Metric label="Carreras reales" value={loading ? '...' : careers.totalItems} />
+        {error ? <ErrorBox message={error} /> : null}
+        {!careers.items.length && !loading ? (
+          <EmptyState title="Sin carreras">No hay carreras reales desde /api/catalog/careers.</EmptyState>
+        ) : null}
+      </section>
+
+      <section className="catalog-main">
+        <div className="section-title">
+          <div>
+            <p className="eyebrow">Jerarquia academica</p>
+            <h2>{selectedCareerName}</h2>
+          </div>
+          <Badge tone="info">carrera -&gt; pensum -&gt; semestre -&gt; cohorte</Badge>
+        </div>
+        <div className="academic-flow">
+          <AcademicStep title="1. Carrera" value={selectedCareerName} state={careers.items.length ? 'Disponible' : 'Sin datos'} />
+          <AcademicStep title="2. Pensums" value="curricula" state={pending.curricula ? 'API pendiente' : 'Disponible'} pending={pending.curricula} />
+          <AcademicStep title="3. Cursos por semestre" value="curriculum-courses" state={pending.curriculumCourses ? 'API pendiente' : 'Disponible'} pending={pending.curriculumCourses} />
+          <AcademicStep title="4. Cohortes" value="cohorts" state={pending.cohorts ? 'API pendiente' : 'Disponible'} pending={pending.cohorts} />
+        </div>
+
+        <div className="section-title">
+          <h2>Catalogo base de cursos</h2>
+          <span className="muted">{courses.totalItems} cursos reales</span>
+        </div>
+        {pending.courses ? <ApiPending>{pending.courses}</ApiPending> : null}
+        <Table>
+          <table>
+            <thead>
+              <tr>
+                <th>Codigo</th>
+                <th>Nombre</th>
+                <th>Lab</th>
+                <th>Bloques min</th>
+                <th>Bloques max</th>
+              </tr>
+            </thead>
+            <tbody>
+              {courses.items.map((course, index) => (
+                <tr key={String(course.id ?? course.code ?? index)}>
+                  <td>{String(course.code ?? '')}</td>
+                  <td>{String(course.name ?? '')}</td>
+                  <td>{String(course.requiresLab ?? '')}</td>
+                  <td>{String(course.weeklyBlocksMin ?? '')}</td>
+                  <td>{String(course.weeklyBlocksMax ?? '')}</td>
+                </tr>
+              ))}
+              {!courses.items.length ? (
+                <tr>
+                  <td colSpan={5}>{loading ? 'Cargando...' : 'Sin cursos reales cargados'}</td>
+                </tr>
+              ) : null}
+            </tbody>
+          </table>
+        </Table>
+      </section>
+    </div>
+  );
+}
+
+function AcademicStep({
+  title,
+  value,
+  state,
+  pending,
+}: {
+  title: string;
+  value: string;
+  state: string;
+  pending?: string;
+}) {
+  return (
+    <article className="academic-step">
+      <div className="section-title">
+        <h2>{title}</h2>
+        <Badge tone={pending ? 'warning' : 'success'}>{state}</Badge>
+      </div>
+      <p>{value}</p>
+      {pending ? <ApiPending>{pending}</ApiPending> : null}
+    </article>
+  );
+}
+
+function TeachersPage({ token }: { token: string }) {
+  const [teachers, setTeachers] = useState<PageResponse>({ items: [], page: 0, size: 50, totalItems: 0, totalPages: 0 });
+  const [careers, setCareers] = useState<PageResponse>({ items: [], page: 0, size: 50, totalItems: 0, totalPages: 0 });
+  const [journeys, setJourneys] = useState<PageResponse>({ items: [], page: 0, size: 50, totalItems: 0, totalPages: 0 });
+  const [careerFilter, setCareerFilter] = useState('');
+  const [journeyFilter, setJourneyFilter] = useState('');
+  const [pending, setPending] = useState<Record<string, string>>({});
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let ignore = false;
+    async function loadTeachers() {
+      setError('');
+      setPending({});
+      setLoading(true);
+      const [teacherResult, careerResult, journeyResult, careerJourneyResult, coursesResult, availabilityResult] = await Promise.allSettled([
+        listCatalog('teachers', 'page=0&size=100&sort=code,asc', token),
+        listCatalog('careers', 'page=0&size=100&sort=code,asc', token),
+        listCatalog('journeys', 'page=0&size=100&sort=code,asc', token),
+        listCatalog('teacher-career-journeys', 'page=0&size=20', token),
+        listCatalog('teacher-courses', 'page=0&size=20', token),
+        listCatalog('teacher-availability', 'page=0&size=20', token),
+      ]);
+      if (ignore) {
+        return;
+      }
+      if (teacherResult.status === 'fulfilled') {
+        setTeachers(teacherResult.value);
+      } else {
+        setError(teacherResult.reason instanceof Error ? teacherResult.reason.message : 'Error cargando docentes.');
+      }
+      if (careerResult.status === 'fulfilled') {
+        setCareers(careerResult.value);
+      }
+      if (journeyResult.status === 'fulfilled') {
+        setJourneys(journeyResult.value);
+      }
+      setPending({
+        ...(careerJourneyResult.status === 'rejected' ? { careerJourneys: 'GET /api/catalog/teacher-career-journeys no disponible.' } : {}),
+        ...(coursesResult.status === 'rejected' ? { courses: 'GET /api/catalog/teacher-courses no disponible.' } : {}),
+        ...(availabilityResult.status === 'rejected' ? { availability: 'GET /api/catalog/teacher-availability no disponible para CRUD admin.' } : {}),
+      });
+      setLoading(false);
+    }
+    void loadTeachers();
+    return () => {
+      ignore = true;
+    };
+  }, [token]);
+
+  return (
+    <div className="teachers-page">
+      <section className="form-panel">
+        <p className="eyebrow">Docentes</p>
+        <h2>Filtros preparados</h2>
+        <label>
+          Carrera
+          <select value={careerFilter} onChange={(event) => setCareerFilter(event.target.value)} disabled={!careers.items.length || Boolean(pending.careerJourneys)}>
+            <option value="">Todas</option>
+            {careers.items.map((career) => (
+              <option key={String(career.id ?? career.code)} value={String(career.id ?? career.code)}>
+                {String(career.code ?? '')} {String(career.name ?? '')}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Jornada
+          <select value={journeyFilter} onChange={(event) => setJourneyFilter(event.target.value)} disabled={!journeys.items.length || Boolean(pending.careerJourneys)}>
+            <option value="">Todas</option>
+            {journeys.items.map((journey) => (
+              <option key={String(journey.id ?? journey.code)} value={String(journey.id ?? journey.code)}>
+                {String(journey.code ?? '')} {String(journey.name ?? '')}
+              </option>
+            ))}
+          </select>
+        </label>
+        {pending.careerJourneys ? <ApiPending>{pending.careerJourneys} Filtros sin aplicar hasta tener asignaciones reales.</ApiPending> : null}
+        <Metric label="Docentes reales" value={loading ? '...' : teachers.totalItems} />
+      </section>
+
+      <section className="catalog-main">
+        <div className="section-title">
+          <h2>Catalogo de docentes</h2>
+          <Badge tone="info">disponibilidad -&gt; carrera+jornada -&gt; cursos</Badge>
+        </div>
+        {error ? <ErrorBox message={error} /> : null}
+        <Table>
+          <table>
+            <thead>
+              <tr>
+                <th>Codigo</th>
+                <th>Nombre</th>
+                <th>Prioridad</th>
+                <th>Min</th>
+                <th>Max</th>
+                <th>Activo</th>
+              </tr>
+            </thead>
+            <tbody>
+              {teachers.items.map((teacher, index) => (
+                <tr key={String(teacher.id ?? teacher.code ?? index)}>
+                  <td>{String(teacher.code ?? '')}</td>
+                  <td>{String(teacher.fullName ?? '')}</td>
+                  <td>{String(teacher.priority ?? '')}</td>
+                  <td>{String(teacher.minCourses ?? '')}</td>
+                  <td>{String(teacher.maxCourses ?? '')}</td>
+                  <td>{String(teacher.active ?? '')}</td>
+                </tr>
+              ))}
+              {!teachers.items.length ? (
+                <tr>
+                  <td colSpan={6}>{loading ? 'Cargando...' : 'Sin docentes reales'}</td>
+                </tr>
+              ) : null}
+            </tbody>
+          </table>
+        </Table>
+
+        <div className="relation-grid">
+          <PendingPanel title="Docente -> carrera+jornada" pending={pending.careerJourneys} />
+          <PendingPanel title="Docente -> cursos" pending={pending.courses} />
+          <PendingPanel title="Disponibilidad admin" pending={pending.availability}>
+            <AvailabilityMatrix locked />
+          </PendingPanel>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function AvailabilityPage({ role, token }: { role: string; token: string }) {
+  const isTeacher = role === 'TEACHER';
+  const [pending, setPending] = useState('Consultando GET /api/teacher/availability...');
+
+  useEffect(() => {
+    let ignore = false;
+    if (!isTeacher) {
+      setPending('ADMIN no edita su disponibilidad aqui. Use endpoints admin cuando existan.');
+      return;
+    }
+    api('/api/teacher/availability', {}, token)
+      .then(() => {
+        if (!ignore) {
+          setPending('GET /api/teacher/availability existe, falta conectar DTO real.');
+        }
+      })
+      .catch(() => {
+        if (!ignore) {
+          setPending('GET/PUT /api/teacher/availability no disponible en backend actual.');
+        }
+      });
+    return () => {
+      ignore = true;
+    };
+  }, [isTeacher, token]);
+
+  return (
+    <div className="availability-page">
+      <section className="form-panel">
+        <p className="eyebrow">Disponibilidad docente</p>
+        <h2>{isTeacher ? 'Mi matriz' : 'Vista fuera de alcance'}</h2>
+        <ApiPending>{pending}</ApiPending>
+      </section>
+      <section className="catalog-main">
+        <div className="section-title">
+          <h2>Dia x bloque</h2>
+          <Badge tone="warning">bloqueado</Badge>
+        </div>
+        <AvailabilityMatrix locked />
+      </section>
+    </div>
+  );
+}
+
+function TimePage({ token }: { token: string }) {
+  const catalog = CATALOGS.find((item) => item.resource === 'journeys') ?? CATALOGS[0];
+  const [page, setPage] = useState<PageResponse>({ items: [], page: 0, size: 20, totalItems: 0, totalPages: 0 });
+  const [values, setValues] = useState(() => defaultValues(catalog));
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  async function load() {
+    setError('');
+    setLoading(true);
+    try {
+      setPage(await listCatalog('journeys', 'page=0&size=50&sort=code,asc', token));
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : 'Error cargando jornadas.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    void load();
+  }, [token]);
+
+  async function create(event: FormEvent) {
+    event.preventDefault();
+    setError('');
+    try {
+      await createCatalogItem('journeys', normalizePayload(catalog, values), token);
+      setValues(defaultValues(catalog));
+      await load();
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : 'Error creando jornada.');
+    }
+  }
+
+  return (
+    <div className="time-page">
+      <section className="catalog-main">
+        <div className="section-title">
+          <h2>Jornadas</h2>
+          <button className="ghost" onClick={load} type="button" disabled={loading}>Actualizar</button>
+        </div>
+        {error ? <ErrorBox message={error} /> : null}
+        <Table>
+          <table>
+            <thead>
+              <tr>
+                <th>Codigo</th>
+                <th>Nombre</th>
+                <th>Min/bloque</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Bloques</th>
+              </tr>
+            </thead>
+            <tbody>
+              {page.items.map((journey, index) => (
+                <tr key={String(journey.id ?? journey.code ?? index)}>
+                  <td>{String(journey.code ?? '')}</td>
+                  <td>{String(journey.name ?? '')}</td>
+                  <td>{String(journey.blockMinutes ?? '')}</td>
+                  <td>{String(journey.startTime ?? '')}</td>
+                  <td>{String(journey.endTime ?? '')}</td>
+                  <td>{countJourneyBlocks(journey)}</td>
+                </tr>
+              ))}
+              {!page.items.length ? (
+                <tr>
+                  <td colSpan={6}>{loading ? 'Cargando...' : 'Sin jornadas reales'}</td>
+                </tr>
+              ) : null}
+            </tbody>
+          </table>
+        </Table>
+        <section className="form-panel">
+          <div className="section-title">
+            <h2>Descansos fijos</h2>
+            <Badge tone="warning">fixed_breaks</Badge>
+          </div>
+          <ApiPending>GET/POST para fixed_breaks no existe. No se calculan ni persisten bloques desde frontend.</ApiPending>
+        </section>
+      </section>
+      <form className="form-panel" onSubmit={create}>
+        <h2>Crear jornada</h2>
+        {catalog.fields.map((field) => (
+          <CatalogField
+            field={field}
+            key={field.name}
+            value={values[field.name]}
+            onChange={(value) => setValues((current) => ({ ...current, [field.name]: value }))}
+          />
+        ))}
+        <button type="submit">Guardar</button>
+      </form>
+    </div>
+  );
+}
+
+function PendingPanel({ title, pending, children }: { title: string; pending?: string; children?: React.ReactNode }) {
+  return (
+    <article className="pending-panel">
+      <div className="section-title">
+        <h2>{title}</h2>
+        <Badge tone={pending ? 'warning' : 'success'}>{pending ? 'API pendiente' : 'Disponible'}</Badge>
+      </div>
+      {pending ? <ApiPending>{pending}</ApiPending> : null}
+      <button type="button" disabled title={pending ?? 'Pendiente de conectar DTO real'}>Editar</button>
+      {children}
+    </article>
+  );
+}
+
+const AVAILABILITY_STATES = [
+  ['Disponible', 'Preferido', 'No disponible', 'Disponible', 'Disponible'],
+  ['No disponible', 'Disponible', 'Disponible', 'Preferido', 'Disponible'],
+  ['Disponible', 'Disponible', 'Preferido', 'No disponible', 'Disponible'],
+  ['Preferido', 'Disponible', 'Disponible', 'Disponible', 'No disponible'],
+  ['Disponible', 'No disponible', 'Disponible', 'Disponible', 'Preferido'],
+];
+
+function AvailabilityMatrix({ locked }: { locked: boolean }) {
+  return (
+    <div className="availability-matrix" aria-label={locked ? 'Matriz de disponibilidad bloqueada' : 'Matriz de disponibilidad'}>
+      <div className="matrix-head">Bloque</div>
+      {DAYS.slice(0, 5).map((day) => <div className="matrix-head" key={day}>{day}</div>)}
+      {AVAILABILITY_STATES.map((row, rowIndex) => (
+        <React.Fragment key={rowIndex}>
+          <div className="matrix-time">B{rowIndex + 1}</div>
+          {row.map((state, colIndex) => (
+            <button className={`matrix-cell state-${state.toLowerCase().replaceAll(' ', '-')}`} disabled={locked} key={`${rowIndex}-${colIndex}`} type="button">
+              {state}
+            </button>
+          ))}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+function countJourneyBlocks(journey: Record<string, unknown>) {
+  const start = minutesOfDay(String(journey.startTime ?? ''));
+  const end = minutesOfDay(String(journey.endTime ?? ''));
+  const blockMinutes = Number(journey.blockMinutes);
+  if (start === null || end === null || !Number.isFinite(blockMinutes) || blockMinutes <= 0 || end <= start) {
+    return 'Sin dato';
+  }
+  return Math.floor((end - start) / blockMinutes);
+}
+
+function minutesOfDay(value: string) {
+  const [hour, minute] = value.split(':').map(Number);
+  if (!Number.isFinite(hour) || !Number.isFinite(minute)) {
+    return null;
+  }
+  return hour * 60 + minute;
 }
 
 function ImportWizard({ token }: { token: string }) {
@@ -500,10 +1065,10 @@ function ImportWizard({ token }: { token: string }) {
       const form = new FormData();
       form.append('file', file);
       form.append('mode', mode);
-      const response = await apiForm<ImportResponse>('/api/imports/academic-data', form, token);
+      const response = await importAcademicData(form, token);
       setResult(response);
       if (response.errorCount > 0) {
-        const data = await api<PageResponse<ImportErrorRow>>(`/api/imports/${response.importBatchId}/errors?page=0&size=20`, {}, token);
+        const data = await listImportErrors(response.importBatchId, token);
         setErrors(data);
       } else {
         setErrors({ items: [], page: 0, size: 20, totalItems: 0, totalPages: 0 });
@@ -554,7 +1119,7 @@ function ImportWizard({ token }: { token: string }) {
               <Metric label="Validas" value={result.summary.rowsValid} />
               <Metric label="Invalidas" value={result.summary.rowsInvalid} />
             </div>
-            <div className="table-wrap">
+            <Table>
               <table>
                 <thead>
                   <tr>
@@ -584,13 +1149,12 @@ function ImportWizard({ token }: { token: string }) {
                   ) : null}
                 </tbody>
               </table>
-            </div>
+            </Table>
           </>
         ) : (
-          <div className="empty-state">
-            <h2>Sin archivo procesado</h2>
-            <p>Sube un CSV o XLSX para ver resumen y errores por hoja, fila y columna.</p>
-          </div>
+          <EmptyState title="Sin archivo procesado">
+            Sube un CSV o XLSX para ver resumen y errores por hoja, fila y columna.
+          </EmptyState>
         )}
       </section>
     </div>
@@ -638,7 +1202,7 @@ function SchedulePlanPage({ token }: { token: string }) {
   }
 
   async function validatePlan() {
-    const response = await runAction('validate', () => api<ValidationResponse>(`/api/schedule-plans/${numericPlanId}/validate`, { method: 'POST', body: '{}' }, token));
+    const response = await runAction('validate', () => validateSchedulePlan(numericPlanId, token));
     if (response) {
       setValidation(response);
       setStatus(response.status);
@@ -646,10 +1210,7 @@ function SchedulePlanPage({ token }: { token: string }) {
   }
 
   async function generatePlan() {
-    const response = await runAction('generate', () => api<GenerationResponse>(`/api/schedule-plans/${numericPlanId}/generate`, {
-      method: 'POST',
-      body: JSON.stringify({ solverMode: 'NORMAL', timeLimitSeconds: 30, weights: {} }),
-    }, token));
+    const response = await runAction('generate', () => generateSchedulePlan(numericPlanId, token));
     if (response) {
       setGeneration(response);
       setRunId(response.runId);
@@ -660,8 +1221,7 @@ function SchedulePlanPage({ token }: { token: string }) {
   }
 
   async function loadResult(nextRunId = runId) {
-    const query = nextRunId ? `?runId=${nextRunId}` : '';
-    const response = await runAction('result', () => api<ScheduleResult>(`/api/schedule-plans/${numericPlanId}/result${query}`, {}, token));
+    const response = await runAction('result', () => getScheduleResult(numericPlanId, nextRunId, token));
     if (response) {
       setResult(response);
       setRunId(response.runId);
@@ -671,35 +1231,28 @@ function SchedulePlanPage({ token }: { token: string }) {
   }
 
   async function loadSubstitutions() {
-    const response = await runAction('substitutions', () => api<{ items: SubstitutionResponse[] }>(`/api/substitutions?planId=${numericPlanId}`, {}, token));
+    const response = await runAction('substitutions', () => listSubstitutions(numericPlanId, token));
     if (response) {
       setSubstitutions(response.items);
     }
   }
 
   async function loadViolations(nextRunId = runId) {
-    const query = nextRunId ? `?runId=${nextRunId}` : '';
-    const response = await runAction('violations', () => api<{ items: Violation[] }>(`/api/schedule-plans/${numericPlanId}/violations${query}`, {}, token));
+    const response = await runAction('violations', () => listScheduleViolations(numericPlanId, nextRunId, token));
     if (response) {
       setViolations(response.items);
     }
   }
 
   async function approvePlan() {
-    const response = await runAction('approve', () => api<{ status: PlanStatus }>(`/api/schedule-plans/${numericPlanId}/approve`, {
-      method: 'POST',
-      body: JSON.stringify({ runId, comment: 'Aprobado desde frontend.' }),
-    }, token));
+    const response = await runAction('approve', () => approveSchedulePlan(numericPlanId, runId, token));
     if (response) {
       setStatus(response.status);
     }
   }
 
   async function lockPlan() {
-    const response = await runAction('lock', () => api<{ status: PlanStatus }>(`/api/schedule-plans/${numericPlanId}/lock`, {
-      method: 'POST',
-      body: JSON.stringify({ comment: 'Bloqueado desde frontend.' }),
-    }, token));
+    const response = await runAction('lock', () => lockSchedulePlan(numericPlanId, token));
     if (response) {
       setStatus(response.status);
     }
@@ -710,17 +1263,7 @@ function SchedulePlanPage({ token }: { token: string }) {
       setError('Carga un resultado antes de editar.');
       return;
     }
-    const response = await runAction('manual-edit', () => api<ManualEditResponse>(`/api/schedule-plans/${numericPlanId}/manual-edits`, {
-      method: 'POST',
-      body: JSON.stringify({
-        clientRequestId: `edit-${Date.now()}-${draft.assignment.sessionId}`,
-        baseRunId: runId,
-        sessionId: draft.assignment.sessionId,
-        targetTeacherId: draft.targetTeacherId ? Number(draft.targetTeacherId) : null,
-        targetRoomId: draft.targetRoomId ? Number(draft.targetRoomId) : null,
-        targetTimeBlockId: Number(draft.targetTimeBlockId),
-      }),
-    }, token));
+    const response = await runAction('manual-edit', () => submitManualScheduleEdit(numericPlanId, runId, draft, token));
     if (response) {
       setManualResult(response);
       setRunId(response.resultRunId);
@@ -731,17 +1274,7 @@ function SchedulePlanPage({ token }: { token: string }) {
 
   async function createSubstitution(event: FormEvent) {
     event.preventDefault();
-    const response = await runAction('substitution', () => api<SubstitutionResponse>('/api/substitutions', {
-      method: 'POST',
-      body: JSON.stringify({
-        assignmentId: Number(substitutionDraft.assignmentId),
-        substituteTeacherId: Number(substitutionDraft.substituteTeacherId),
-        startsAt: new Date(substitutionDraft.startsAt).toISOString(),
-        endsAt: substitutionDraft.endsAt ? new Date(substitutionDraft.endsAt).toISOString() : null,
-        isPermanent: substitutionDraft.isPermanent,
-        reason: substitutionDraft.reason || null,
-      }),
-    }, token));
+    const response = await runAction('substitution', () => postSubstitution(substitutionDraft, token));
     if (response) {
       setSubstitutions((current) => [response, ...current]);
       await loadResult();
@@ -766,18 +1299,18 @@ function SchedulePlanPage({ token }: { token: string }) {
         <StatusBadge status={status} />
         {error ? <ErrorBox message={error} /> : null}
         <div className="action-grid">
-          <button type="button" onClick={validatePlan} disabled={!hasPlan || !canValidate || loading !== ''}>
+          <ActionButton type="button" onClick={validatePlan} disabled={!hasPlan || !canValidate || loading !== ''}>
             {loading === 'validate' ? 'Validando...' : 'Validar'}
-          </button>
-          <button type="button" onClick={generatePlan} disabled={!hasPlan || !canGenerate || loading !== ''}>
+          </ActionButton>
+          <ActionButton type="button" onClick={generatePlan} disabled={!hasPlan || !canGenerate || loading !== ''}>
             {loading === 'generate' ? 'Generando...' : 'Generar'}
-          </button>
-          <button type="button" onClick={approvePlan} disabled={!hasPlan || !canApprove || loading !== ''}>
+          </ActionButton>
+          <ActionButton type="button" onClick={approvePlan} disabled={!hasPlan || !canApprove || loading !== ''}>
             Aprobar
-          </button>
-          <button type="button" onClick={lockPlan} disabled={!hasPlan || !canLock || loading !== ''}>
+          </ActionButton>
+          <ActionButton type="button" onClick={lockPlan} disabled={!hasPlan || !canLock || loading !== ''}>
             Bloquear
-          </button>
+          </ActionButton>
         </div>
         <button className="ghost" type="button" onClick={() => { void loadResult(); void loadViolations(); }} disabled={!hasPlan || loading !== ''}>
           Cargar resultado
@@ -803,10 +1336,7 @@ function SchedulePlanPage({ token }: { token: string }) {
             onEdit={submitManualEdit}
           />
         ) : (
-          <div className="empty-state">
-            <h2>Sin resultado cargado</h2>
-            <p>Genera o carga el resultado del plan para ver la grilla.</p>
-          </div>
+          <EmptyState title="Sin resultado cargado">Genera o carga el resultado del plan para ver la grilla.</EmptyState>
         )}
         {result ? (
           <SubstitutionPanel
@@ -1189,7 +1719,7 @@ function SubstitutionPanel({
           {loading ? 'Guardando...' : 'Crear sustitucion'}
         </button>
       </form>
-      <div className="table-wrap">
+      <Table>
         <table>
           <thead>
             <tr>
@@ -1219,7 +1749,7 @@ function SubstitutionPanel({
             ) : null}
           </tbody>
         </table>
-      </div>
+      </Table>
     </section>
   );
 }
@@ -1266,56 +1796,19 @@ function Metric({ label, value }: { label: string; value: string | number }) {
   );
 }
 
-function StatusBadge({ status }: { status: string }) {
-  return <span className={`status status-${status.toLowerCase().replaceAll('_', '-')}`}>{status}</span>;
-}
-
-function IssueTable({ title, items }: { title: string; items: (ValidationIssue | Violation)[] }) {
-  return (
-    <div className="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th colSpan={4}>{title}</th>
-          </tr>
-          <tr>
-            <th>Severidad</th>
-            <th>Codigo</th>
-            <th>Mensaje</th>
-            <th>Accion</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((item) => (
-            <tr key={`${item.code}-${item.id}`}>
-              <td>{item.severity}</td>
-              <td>{item.code}</td>
-              <td>{item.message}</td>
-              <td>{'suggestedAction' in item ? item.suggestedAction ?? '' : ''}</td>
-            </tr>
-          ))}
-          {!items.length ? (
-            <tr>
-              <td colSpan={4}>Sin registros</td>
-            </tr>
-          ) : null}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
 function CatalogPage({ catalog, token }: { catalog: Catalog; token: string }) {
   const [page, setPage] = useState<PageResponse>({ items: [], page: 0, size: 20, totalItems: 0, totalPages: 0 });
   const [values, setValues] = useState(() => defaultValues(catalog));
+  const [sameWeeklyBlocks, setSameWeeklyBlocks] = useState(true);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const isCourseCatalog = catalog.resource === 'courses';
 
   async function load() {
     setError('');
     setLoading(true);
     try {
-      const data = await api<PageResponse>(`/api/catalog/${catalog.resource}?page=0&size=20&sort=code,asc`, {}, token);
+      const data = await listCatalog(catalog.resource, 'page=0&size=20&sort=code,asc', token);
       setPage(data);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Error cargando catalogo.');
@@ -1326,6 +1819,7 @@ function CatalogPage({ catalog, token }: { catalog: Catalog; token: string }) {
 
   useEffect(() => {
     setValues(defaultValues(catalog));
+    setSameWeeklyBlocks(true);
     void load();
   }, [catalog.resource]);
 
@@ -1333,10 +1827,7 @@ function CatalogPage({ catalog, token }: { catalog: Catalog; token: string }) {
     event.preventDefault();
     setError('');
     try {
-      await api(`/api/catalog/${catalog.resource}`, {
-        method: 'POST',
-        body: JSON.stringify(normalizePayload(catalog, values)),
-      }, token);
+      await createCatalogItem(catalog.resource, normalizePayload(catalog, values), token);
       setValues(defaultValues(catalog));
       await load();
     } catch (caught) {
@@ -1354,7 +1845,7 @@ function CatalogPage({ catalog, token }: { catalog: Catalog; token: string }) {
           </button>
         </div>
         {error ? <ErrorBox message={error} /> : null}
-        <div className="table-wrap">
+        <Table>
           <table>
             <thead>
               <tr>
@@ -1378,21 +1869,46 @@ function CatalogPage({ catalog, token }: { catalog: Catalog; token: string }) {
               ) : null}
             </tbody>
           </table>
-        </div>
+        </Table>
         <p className="muted">
           {page.totalItems} registros · pagina {page.page + 1} de {Math.max(page.totalPages, 1)}
         </p>
       </section>
       <form className="form-panel" onSubmit={create}>
         <h2>Crear</h2>
-        {catalog.fields.map((field) => (
-          <CatalogField
-            field={field}
-            key={field.name}
-            value={values[field.name]}
-            onChange={(value) => setValues((current) => ({ ...current, [field.name]: value }))}
-          />
-        ))}
+        {isCourseCatalog ? (
+          <label className="checkbox switch-row">
+            <input
+              checked={sameWeeklyBlocks}
+              onChange={(event) => setSameWeeklyBlocks(event.target.checked)}
+              type="checkbox"
+            />
+            Usar cantidad unica de bloques
+          </label>
+        ) : null}
+        {catalog.fields.map((field) => {
+          if (isCourseCatalog && sameWeeklyBlocks && field.name === 'weeklyBlocksMax') {
+            return null;
+          }
+          return (
+            <CatalogField
+              field={
+                isCourseCatalog && sameWeeklyBlocks && field.name === 'weeklyBlocksMin'
+                  ? { ...field, label: 'Cantidad de bloques' }
+                  : field
+              }
+              key={field.name}
+              value={values[field.name]}
+              onChange={(value) => setValues((current) => ({
+                ...current,
+                [field.name]: value,
+                ...(isCourseCatalog && sameWeeklyBlocks && field.name === 'weeklyBlocksMin'
+                  ? { weeklyBlocksMax: value }
+                  : {}),
+              }))}
+            />
+          );
+        })}
         <button type="submit">Guardar</button>
       </form>
     </div>

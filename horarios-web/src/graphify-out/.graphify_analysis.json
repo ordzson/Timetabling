@@ -1,0 +1,257 @@
+{
+  "communities": {
+    "0": [
+      "main",
+      "main_academiapage",
+      "main_academicstep",
+      "main_adminshell",
+      "main_app",
+      "main_availability_states",
+      "main_availabilitymatrix",
+      "main_availabilitypage",
+      "main_catalogfield",
+      "main_catalogpage",
+      "main_catalogs",
+      "main_conflictlist",
+      "main_conflictpanel",
+      "main_dashboardhome",
+      "main_days",
+      "main_defaultvalues",
+      "main_errorbox",
+      "main_gridcell",
+      "main_gridoptions",
+      "main_importwizard",
+      "main_login",
+      "main_manualeditdrawer",
+      "main_manualeditsummary",
+      "main_matchesgridfilter",
+      "main_metric",
+      "main_nav_items",
+      "main_normalizepayload",
+      "main_pendingpanel",
+      "main_readsession",
+      "main_schedulegrid",
+      "main_scheduleplanpage",
+      "main_sessionblock",
+      "main_sessioncard",
+      "main_substitutionpanel",
+      "main_teacherspage",
+      "main_timepage",
+      "main_totimeblockid"
+    ],
+    "1": [
+      "api_catalogs",
+      "api_catalogs_createcatalogitem",
+      "api_catalogs_listcatalog",
+      "api_client",
+      "api_client_apiform",
+      "api_client_formatapierror",
+      "api_imports",
+      "api_imports_importacademicdata",
+      "api_imports_listimporterrors",
+      "types_catalog",
+      "types_catalog_adminview",
+      "types_catalog_apierror",
+      "types_catalog_catalog",
+      "types_catalog_field",
+      "types_catalog_pageresponse",
+      "types_import",
+      "types_import_importerrorrow",
+      "types_import_importresponse",
+      "types_import_importsummary"
+    ],
+    "2": [
+      "types_schedule",
+      "types_schedule_assignment",
+      "types_schedule_generationresponse",
+      "types_schedule_gridview",
+      "types_schedule_manualdraft",
+      "types_schedule_manualeditresponse",
+      "types_schedule_planstatus",
+      "types_schedule_scheduleplansummary",
+      "types_schedule_scheduleresult",
+      "types_schedule_validationissue",
+      "types_schedule_validationresponse",
+      "types_schedule_violation"
+    ],
+    "3": [
+      "api_client_api",
+      "api_scheduleplans",
+      "api_scheduleplans_approvescheduleplan",
+      "api_scheduleplans_generatescheduleplan",
+      "api_scheduleplans_getscheduleresult",
+      "api_scheduleplans_listscheduleplans",
+      "api_scheduleplans_listscheduleviolations",
+      "api_scheduleplans_lockscheduleplan",
+      "api_scheduleplans_submitmanualscheduleedit",
+      "api_scheduleplans_validatescheduleplan"
+    ],
+    "4": [
+      "api_substitutions",
+      "api_substitutions_createsubstitution",
+      "api_substitutions_listsubstitutions",
+      "types_schedule_substitutiondraft",
+      "types_schedule_substitutionresponse"
+    ],
+    "5": [
+      "components_badge",
+      "components_badge_badge",
+      "components_statusbadge",
+      "components_statusbadge_statusbadge",
+      "components_statusbadge_tones"
+    ],
+    "6": [
+      "types_auth",
+      "types_auth_role",
+      "types_auth_session",
+      "types_auth_user"
+    ],
+    "7": [
+      "components_actionbutton",
+      "components_actionbutton_actionbutton"
+    ],
+    "8": [
+      "components_apipending",
+      "components_apipending_apipending"
+    ],
+    "9": [
+      "components_emptystate",
+      "components_emptystate_emptystate"
+    ],
+    "10": [
+      "components_table",
+      "components_table_table"
+    ],
+    "11": [
+      "main_countjourneyblocks",
+      "main_minutesofday"
+    ]
+  },
+  "cohesion": {
+    "0": 0.05405405405405406,
+    "1": 0.16374269005847952,
+    "2": 0.16666666666666666,
+    "3": 0.37777777777777777,
+    "4": 0.4,
+    "5": 0.5,
+    "6": 0.5,
+    "7": 1.0,
+    "8": 1.0,
+    "9": 1.0,
+    "10": 1.0,
+    "11": 1.0
+  },
+  "gods": [
+    {
+      "id": "api_client_api",
+      "label": "api()",
+      "degree": 20
+    },
+    {
+      "id": "types_catalog_pageresponse",
+      "label": "PageResponse",
+      "degree": 5
+    },
+    {
+      "id": "api_client_apiform",
+      "label": "apiForm()",
+      "degree": 4
+    },
+    {
+      "id": "api_catalogs_listcatalog",
+      "label": "listCatalog()",
+      "degree": 3
+    },
+    {
+      "id": "api_catalogs_createcatalogitem",
+      "label": "createCatalogItem()",
+      "degree": 3
+    },
+    {
+      "id": "api_client_formatapierror",
+      "label": "formatApiError()",
+      "degree": 3
+    },
+    {
+      "id": "api_imports_importacademicdata",
+      "label": "importAcademicData()",
+      "degree": 3
+    },
+    {
+      "id": "api_imports_listimporterrors",
+      "label": "listImportErrors()",
+      "degree": 3
+    },
+    {
+      "id": "api_scheduleplans_listscheduleplans",
+      "label": "listSchedulePlans()",
+      "degree": 3
+    },
+    {
+      "id": "api_scheduleplans_validatescheduleplan",
+      "label": "validateSchedulePlan()",
+      "degree": 3
+    }
+  ],
+  "surprises": [
+    {
+      "source": "listCatalog()",
+      "target": "api()",
+      "source_files": [
+        "api/catalogs.ts",
+        "api/client.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "createCatalogItem()",
+      "target": "api()",
+      "source_files": [
+        "api/catalogs.ts",
+        "api/client.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "listImportErrors()",
+      "target": "api()",
+      "source_files": [
+        "api/imports.ts",
+        "api/client.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "createSubstitution()",
+      "target": "api()",
+      "source_files": [
+        "api/substitutions.ts",
+        "api/client.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "listSubstitutions()",
+      "target": "api()",
+      "source_files": [
+        "api/substitutions.ts",
+        "api/client.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    }
+  ],
+  "tokens": {
+    "input": 0,
+    "output": 0
+  }
+}

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>EduPaper Admin - University Scheduler</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;family=Work+Sans:wght@400;500;600&amp;family=Space+Grotesk:wght@500;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "surface-variant": "#f1dee2",
+                        "surface": "#fff8f8",
+                        "on-secondary-fixed": "#001f23",
+                        "on-surface-variant": "#554248",
+                        "sky-blue": "#90eefb",
+                        "outline": "#887178",
+                        "on-surface": "#23191c",
+                        "surface-container-highest": "#f1dee2",
+                        "surface-container-low": "#fff0f3",
+                        "on-tertiary-fixed": "#251a00",
+                        "paper-cream": "#fff9ec",
+                        "error": "#ba1a1a",
+                        "on-background": "#23191c",
+                        "surface-dim": "#e8d5da",
+                        "surface-container": "#fde9ee",
+                        "surface-tint": "#a3346a",
+                        "background": "#fff8f8",
+                        "surface-container-high": "#f7e3e8",
+                        "paper-shadow": "#1d1c14",
+                        "inverse-primary": "#ffb0ce",
+                        "primary-container": "#a3346a",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#5b4300",
+                        "mint-green": "#006d77",
+                        "on-secondary-container": "#0c6d76",
+                        "tertiary-container": "#785a00",
+                        "ink-dark": "#1d1c14",
+                        "on-secondary-fixed-variant": "#004f56",
+                        "outline-variant": "#dac0c8",
+                        "on-tertiary-container": "#fdd475",
+                        "on-primary": "#ffffff",
+                        "tertiary-yellow": "#785a00",
+                        "inverse-surface": "#392d31",
+                        "surface-bright": "#fff8f8",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#9eecf6",
+                        "secondary": "#006972",
+                        "inverse-on-surface": "#ffecf1",
+                        "tertiary": "#5b4300",
+                        "on-primary-fixed-variant": "#841a52",
+                        "tertiary-fixed-dim": "#eac165",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#ffcbdc",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#3e0022",
+                        "secondary-fixed": "#a1eff9",
+                        "primary-fixed-dim": "#ffb0ce",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#ffdf9b",
+                        "secondary-fixed-dim": "#85d3dd",
+                        "primary-fixed": "#ffd9e5",
+                        "primary": "#841a52"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-safe": "24px",
+                        "xl": "64px",
+                        "sm": "16px",
+                        "md": "24px",
+                        "unit": "4px",
+                        "lg": "40px",
+                        "gutter": "20px",
+                        "xs": "8px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Work Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Work Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Work Sans"],
+                        "label-caps": ["Space Grotesk"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["12px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                        "headline-xl": ["40px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                        "body-md": ["14px", { "lineHeight": "1.5", "fontWeight": "500" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700" }]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            background-color: #fff8f8;
+            color: #1d1c14;
+        }
+
+        /* Custom Ruled Paper Logic */
+        .ruled-list li {
+            border-bottom: 1px solid #1d1c14;
+            position: relative;
+            margin-left: 16px;
+            margin-right: 16px;
+            padding: 12px 0;
+        }
+
+        .ruled-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Hard Shadows */
+        .hard-shadow-sm {
+            box-shadow: 4px 4px 0px 0px rgba(29, 28, 20, 1);
+        }
+
+        .hard-shadow-md {
+            box-shadow: 6px 6px 0px 0px rgba(29, 28, 20, 1);
+        }
+
+        .hard-shadow-lg {
+            box-shadow: 8px 8px 0px 0px rgba(29, 28, 20, 1);
+        }
+
+        /* Active nav translation */
+        .nav-active-transform {
+            transform: translate(4px, 4px);
+            box-shadow: none !important;
+        }
+
+        .btn-press:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px 0px rgba(29, 28, 20, 1);
+        }
+    </style>
+</head>
+
+<body class="font-body-md text-body-md overflow-x-hidden">
+    <!-- SideNavBar Shell -->
+    <aside
+        class="fixed left-0 top-0 h-screen w-64 bg-surface-container-low border-r-3 border-ink-dark flex flex-col p-md z-50">
+        <div class="mb-xl">
+            <div class="flex items-center gap-xs mb-xs">
+                <img class="w-12 h-12"
+                    data-alt="A stylized graphic university crest sticker with bold ink outlines and a heavy paper texture, featuring academic symbols like a torch and an open book, rendered in a playful yet authoritative administrative style."
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxi4knuslzqYiEI5aSCpVj6ZiDwOm_X09Esc9xMaeLbLbm4tg3VdP2Z0aZoB9YCOjg8xckN0H9di4tgB01Fi-QgRssYWnc-pEb3JqKbawO6ZcE-MQOwLNwvvV1LtggiPIINyvU71P7sfrChwQp1ffEIakup5pidj6z2iul10yKFsRDCM7z6mlSU8I3H2V2EinEdcZCzm8nUl4bomWxtYgZH7GLkphirrSOXnYXGY_xVLLDIC8ElXFRpZdoMn0JACbB6P8k8S3w21g1" />
+                <div>
+                    <h1 class="font-headline-lg text-headline-lg font-extrabold text-ink-dark leading-none">EduPaper
+                        Admin</h1>
+                    <p class="font-label-caps text-label-caps opacity-70">V3.4 Stable</p>
+                </div>
+            </div>
+        </div>
+        <nav class="flex-1 space-y-xs">
+            <!-- Dashboard (Active) -->
+            <a class="flex items-center gap-sm p-sm bg-primary text-on-primary border-3 border-ink-dark hard-shadow-sm translate-x-1 transition-all"
+                href="#">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+                <span class="font-label-caps text-label-caps">Dashboard</span>
+            </a>
+            <a class="flex items-center gap-sm p-sm text-on-surface-variant hover:bg-surface-variant transition-all hover:translate-x-1 group"
+                href="#">
+                <span class="material-symbols-outlined">calendar_today</span>
+                <span class="font-label-caps text-label-caps">Course Schedule</span>
+            </a>
+            <a class="flex items-center gap-sm p-sm text-on-surface-variant hover:bg-surface-variant transition-all hover:translate-x-1 group"
+                href="#">
+                <span class="material-symbols-outlined">badge</span>
+                <span class="font-label-caps text-label-caps">Faculty Registry</span>
+            </a>
+            <a class="flex items-center gap-sm p-sm text-on-surface-variant hover:bg-surface-variant transition-all hover:translate-x-1 group"
+                href="#">
+                <span class="material-symbols-outlined">meeting_room</span>
+                <span class="font-label-caps text-label-caps">Room Management</span>
+            </a>
+            <a class="flex items-center gap-sm p-sm text-on-surface-variant hover:bg-surface-variant transition-all hover:translate-x-1 group"
+                href="#">
+                <span class="material-symbols-outlined">history</span>
+                <span class="font-label-caps text-label-caps">System Logs</span>
+            </a>
+        </nav>
+        <div class="mt-auto space-y-xs border-t-3 border-ink-dark pt-md">
+            <button
+                class="w-full flex items-center justify-center gap-sm p-sm bg-tertiary-yellow text-ink-dark border-3 border-ink-dark hard-shadow-sm font-label-caps text-label-caps hover:translate-x-1 active:translate-y-0.5 active:shadow-none transition-all">
+                <span class="material-symbols-outlined">add</span>
+                New Entry
+            </button>
+            <div class="pt-sm space-y-xs">
+                <a class="flex items-center gap-sm p-sm text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-variant transition-all"
+                    href="#">
+                    <span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+                <a class="flex items-center gap-sm p-sm text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-variant transition-all"
+                    href="#">
+                    <span class="material-symbols-outlined">help_outline</span>
+                    Support
+                </a>
+            </div>
+        </div>
+    </aside>
+    <!-- Main Content Area -->
+    <main class="ml-64 flex flex-col min-h-screen">
+        <!-- TopNavBar Shell -->
+        <header
+            class="sticky top-0 z-40 w-full h-20 bg-background border-b-3 border-ink-dark flex items-center justify-between px-lg">
+            <div class="flex items-center gap-lg">
+                <div class="font-headline-lg text-headline-lg font-black text-ink-dark">University Scheduler</div>
+                <div class="flex gap-md h-full items-center">
+                    <a class="font-label-caps text-label-caps text-primary border-b-3 border-primary font-bold py-xs"
+                        href="#">Term View</a>
+                    <a class="font-label-caps text-label-caps text-on-surface-variant font-medium py-xs hover:text-ink-dark transition-colors"
+                        href="#">Daily Grid</a>
+                    <a class="font-label-caps text-label-caps text-on-surface-variant font-medium py-xs hover:text-ink-dark transition-colors"
+                        href="#">Reports</a>
+                </div>
+            </div>
+            <div class="flex items-center gap-md">
+                <div class="flex gap-sm">
+                    <button
+                        class="p-sm flex items-center justify-center hover:bg-surface-container-high transition-colors">
+                        <span class="material-symbols-outlined">notifications</span>
+                    </button>
+                    <button
+                        class="p-sm flex items-center justify-center hover:bg-surface-container-high transition-colors">
+                        <span class="material-symbols-outlined">download</span>
+                    </button>
+                </div>
+                <div class="flex gap-sm">
+                    <button
+                        class="px-md py-sm bg-surface-container-high border-3 border-ink-dark font-label-caps text-label-caps text-ink-dark btn-press">Save
+                        Draft</button>
+                    <button
+                        class="px-md py-sm bg-primary text-on-primary border-3 border-ink-dark hard-shadow-sm font-label-caps text-label-caps btn-press">Publish</button>
+                </div>
+                <img class="w-10 h-10 border-2 border-ink-dark rounded-full"
+                    data-alt="A small circular avatar sticker of a university administrator, depicted in a clean flat illustration style with bold black outlines and friendly colors like deep pink and navy, placed on a high-contrast cream background."
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHh4f15DJD0Ui9KisPHRTPVhlCAP80cH41wtYAkeCIzEJ2uxyU4C_99eKv8oS3P56iCAKupi9ZkF9Oq1MOKeivVACQD6zDDpviSy6O41OdTJPRZlpnsHMTbOrp0aG288m9JgkIxL4nrTgD6R43hItrAwbKSce3LiyxVaeO5q4dOmrPapo_d0dT4WsBrlJUlZTyKYewgSMoojw31rISIJaiFJhFrTfwYS1E2Ba2TdTrsKIW7a2L1ssAp-7Vl-cxcqMsFFiN6FkNZvoX" />
+            </div>
+        </header>
+        <!-- Dashboard Content -->
+        <div class="p-lg space-y-lg flex-1">
+            <!-- Summary Sheet (Central Focus) -->
+            <section
+                class="w-full bg-paper-cream border-3 border-ink-dark hard-shadow-lg p-xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-md">
+                    <span
+                        class="bg-mint-green text-on-primary px-sm py-xs border-3 border-ink-dark font-label-caps text-label-caps transform -rotate-2">STABLE
+                        BUILD</span>
+                </div>
+                <div class="flex flex-col gap-sm relative z-10">
+                    <h2 class="font-label-caps text-label-caps text-primary tracking-widest uppercase">Current Status
+                    </h2>
+                    <h3 class="font-headline-xl text-headline-xl text-ink-dark">Winter 2025 Plan: Draft</h3>
+                    <div class="flex gap-lg mt-md">
+                        <div class="flex flex-col">
+                            <span class="font-label-caps text-label-caps opacity-60">Completion</span>
+                            <span class="font-headline-md text-headline-md text-ink-dark">84%</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-label-caps text-label-caps opacity-60">Pending Approvals</span>
+                            <span class="font-headline-md text-headline-md text-ink-dark">12</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-label-caps text-label-caps opacity-60">Last Edited</span>
+                            <span class="font-headline-md text-headline-md text-ink-dark">2h ago</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Background Decorative Pattern -->
+                <div class="absolute bottom-0 right-0 opacity-10 pointer-events-none">
+                    <span class="material-symbols-outlined text-[120px]">architecture</span>
+                </div>
+            </section>
+            <!-- Grid of Base Sheets -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+                <!-- Active Conflicts -->
+                <div class="bg-paper-cream border-3 border-ink-dark hard-shadow-sm p-md flex flex-col gap-sm">
+                    <div class="flex justify-between items-start">
+                        <span class="material-symbols-outlined text-primary">warning</span>
+                        <span
+                            class="bg-tertiary-yellow text-ink-dark px-xs py-1 border-3 border-ink-dark font-label-caps text-label-caps">CRITICAL</span>
+                    </div>
+                    <h4 class="font-headline-md text-headline-md text-ink-dark">Active Conflicts</h4>
+                    <p class="font-body-sm text-body-sm opacity-70">Overlapping schedules found in Science Hall Wing B.
+                    </p>
+                    <div class="mt-auto pt-sm font-headline-xl text-headline-xl text-ink-dark">07</div>
+                </div>
+                <!-- Unassigned Courses -->
+                <div class="bg-paper-cream border-3 border-ink-dark hard-shadow-sm p-md flex flex-col gap-sm">
+                    <div class="flex justify-between items-start">
+                        <span class="material-symbols-outlined text-secondary">pending_actions</span>
+                        <span
+                            class="bg-sky-blue text-ink-dark px-xs py-1 border-3 border-ink-dark font-label-caps text-label-caps">PENDING</span>
+                    </div>
+                    <h4 class="font-headline-md text-headline-md text-ink-dark">Unassigned Courses</h4>
+                    <p class="font-body-sm text-body-sm opacity-70">Sections awaiting room allocation for Term 1.</p>
+                    <div class="mt-auto pt-sm font-headline-xl text-headline-xl text-ink-dark">23</div>
+                </div>
+                <!-- Room Utilization -->
+                <div class="bg-paper-cream border-3 border-ink-dark hard-shadow-sm p-md flex flex-col gap-sm">
+                    <div class="flex justify-between items-start">
+                        <span class="material-symbols-outlined text-mint-green">meeting_room</span>
+                    </div>
+                    <h4 class="font-headline-md text-headline-md text-ink-dark">Room Utilization</h4>
+                    <p class="font-body-sm text-body-sm opacity-70">Total facility usage across campus footprint.</p>
+                    <div class="mt-auto space-y-xs">
+                        <div class="w-full bg-surface-container h-4 border-3 border-ink-dark overflow-hidden">
+                            <div class="bg-primary h-full w-[68%] border-r-3 border-ink-dark"></div>
+                        </div>
+                        <div class="flex justify-between font-label-caps text-label-caps">
+                            <span>68% Efficiency</span>
+                            <span>Target: 75%</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Recent Activity -->
+                <div class="bg-paper-cream border-3 border-ink-dark hard-shadow-sm flex flex-col overflow-hidden">
+                    <div class="p-md border-b-3 border-ink-dark bg-surface-container-high">
+                        <h4 class="font-label-caps text-label-caps text-ink-dark flex items-center gap-xs">
+                            <span class="material-symbols-outlined text-sm">history</span>
+                            Recent Activity
+                        </h4>
+                    </div>
+                    <ul class="ruled-list flex-1 font-body-sm text-body-sm">
+                        <li>
+                            <p class="font-bold">Prof. Miller assigned</p>
+                            <span class="opacity-60">CS101 • Room 402</span>
+                        </li>
+                        <li>
+                            <p class="font-bold">Term Draft Updated</p>
+                            <span class="opacity-60">Admin User • 12:40 PM</span>
+                        </li>
+                        <li>
+                            <p class="font-bold">Conflict Resolved</p>
+                            <span class="opacity-60">Math Hall A • Sector 2</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Detailed Grid View (Secondary Section) -->
+            <section class="bg-paper-cream border-3 border-ink-dark hard-shadow-md overflow-hidden">
+                <div
+                    class="p-md border-b-3 border-ink-dark bg-surface-container-high flex justify-between items-center">
+                    <h3 class="font-headline-md text-headline-md">Upcoming Term Deadlines</h3>
+                    <button
+                        class="px-md py-xs bg-ink-dark text-paper-cream border-3 border-ink-dark font-label-caps text-label-caps hover:bg-opacity-90">View
+                        Calendar</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left font-body-md border-collapse">
+                        <thead>
+                            <tr class="bg-surface-container border-b-3 border-ink-dark">
+                                <th class="p-md font-label-caps text-label-caps border-r-1 border-ink-dark">Phase</th>
+                                <th class="p-md font-label-caps text-label-caps border-r-1 border-ink-dark">Lead Admin
+                                </th>
+                                <th class="p-md font-label-caps text-label-caps border-r-1 border-ink-dark">Due Date
+                                </th>
+                                <th class="p-md font-label-caps text-label-caps">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b-1 border-ink-dark">
+                                <td class="p-md border-r-1 border-ink-dark">Faculty Preference Collection</td>
+                                <td class="p-md border-r-1 border-ink-dark">Sarah Jenkins</td>
+                                <td class="p-md border-r-1 border-ink-dark">Oct 12, 2024</td>
+                                <td class="p-md">
+                                    <span
+                                        class="px-sm py-1 bg-mint-green text-on-primary border-3 border-ink-dark font-label-caps text-[10px]">COMPLETED</span>
+                                </td>
+                            </tr>
+                            <tr class="border-b-1 border-ink-dark">
+                                <td class="p-md border-r-1 border-ink-dark">Core Department Grid Lock</td>
+                                <td class="p-md border-r-1 border-ink-dark">Marcus Thorne</td>
+                                <td class="p-md border-r-1 border-ink-dark">Oct 28, 2024</td>
+                                <td class="p-md">
+                                    <span
+                                        class="px-sm py-1 bg-tertiary-yellow text-ink-dark border-3 border-ink-dark font-label-caps text-[10px]">IN
+                                        PROGRESS</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-md border-r-1 border-ink-dark">Final Room Allocation</td>
+                                <td class="p-md border-r-1 border-ink-dark">Eliza Vance</td>
+                                <td class="p-md border-r-1 border-ink-dark">Nov 15, 2024</td>
+                                <td class="p-md">
+                                    <span
+                                        class="px-sm py-1 bg-surface-container text-ink-dark border-3 border-ink-dark font-label-caps text-[10px] opacity-50">QUEUED</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <!-- Sticky Interaction Element -->
+        <div class="fixed bottom-lg right-lg z-50">
+            <button
+                class="w-16 h-16 rounded-full bg-primary text-on-primary border-3 border-ink-dark hard-shadow-md flex items-center justify-center hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all group">
+                <span class="material-symbols-outlined text-3xl">question_mark</span>
+                <span
+                    class="absolute right-full mr-md bg-ink-dark text-paper-cream px-md py-xs font-label-caps text-label-caps whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity border-3 border-ink-dark">Need
+                    Assistance?</span>
+            </button>
+        </div>
+    </main>
+    <script>
+        // Simple micro-interaction for dashboard card hover effects
+        document.querySelectorAll('.hard-shadow-sm').forEach(card => {
+            card.addEventListener('mousedown', () => {
+                card.style.transform = 'translate(4px, 4px)';
+                card.style.boxShadow = '0px 0px 0px 0px rgba(29, 28, 20, 1)';
+            });
+            card.addEventListener('mouseup', () => {
+                card.style.transform = 'translate(0px, 0px)';
+                card.style.boxShadow = '4px 4px 0px 0px rgba(29, 28, 20, 1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translate(0px, 0px)';
+                card.style.boxShadow = '4px 4px 0px 0px rgba(29, 28, 20, 1)';
+            });
+        });
+
+        // Search bar activation style (optional)
+        const searchInput = document.querySelector('input');
+        if (searchInput) {
+            searchInput.addEventListener('focus', () => {
+                searchInput.parentElement.classList.add('hard-shadow-sm');
+            });
+            searchInput.addEventListener('blur', () => {
+                searchInput.parentElement.classList.remove('hard-shadow-sm');
+            });
+        }
+    </script>
+</body>
+
+</html>

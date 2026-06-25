@@ -31,8 +31,9 @@ HORARIOS_DB_PASSWORD=1234
 HORARIOS_AUTH_JWT_SECRET=local-dev-secret-change-me
 HORARIOS_AUTH_JWT_TTL_SECONDS=3600
 SPRING_PROFILES_ACTIVE=docker
-VITE_API_BASE=http://localhost:8080
 ```
+
+La web usa `/api` por same-origin. En desarrollo Vite proxy redirige a `localhost:8080`; en Docker nginx redirige al servicio `api`.
 
 Apagar:
 

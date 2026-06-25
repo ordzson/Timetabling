@@ -24,7 +24,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import edu.udeo.horarios.api.catalog.common.PageResponse;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -53,6 +55,59 @@ class ScheduleGenerationService {
   ScheduleGenerationService(JdbcTemplate jdbc, ObjectMapper json) {
     this.jdbc = jdbc;
     this.json = json;
+  }
+
+  @Transactional(readOnly = true)
+  PageResponse<SchedulePlanResponse> listPlans(int page, int size, String status, String scheduleType, String q) {
+    if (page < 0 || size < 1 || size > 100) {
+      throw new ScheduleApiException("BAD_REQUEST", "Paginacion invalida.", HttpStatus.BAD_REQUEST);
+    }
+    List<Object> args = new java.util.ArrayList<>();
+    String where = planWhere(status, scheduleType, q, args);
+    Integer total =
+        jdbc.queryForObject("select count(*) from schedule_plan" + where, Integer.class, args.toArray());
+    args.add(size);
+    args.add(page * size);
+    List<SchedulePlanResponse> items =
+        jdbc.query(
+            """
+            select id, code, name, schedule_type::text, status::text, start_date, end_date, created_at, updated_at
+            from schedule_plan
+            """
+                + where
+                + " order by created_at desc, id desc limit ? offset ?",
+            (rs, rowNum) -> plan(rs),
+            args.toArray());
+    int totalItems = Objects.requireNonNullElse(total, 0);
+    int totalPages = totalItems == 0 ? 0 : (int) Math.ceil((double) totalItems / size);
+    return new PageResponse<>(items, page, size, totalItems, totalPages);
+  }
+
+  @Transactional
+  SchedulePlanResponse createPlan(SchedulePlanRequest request) {
+    if (blank(request.code()) || blank(request.name()) || request.startDate() == null || request.endDate() == null) {
+      throw new ScheduleApiException("BAD_REQUEST", "Campos obligatorios incompletos.", HttpStatus.BAD_REQUEST);
+    }
+    if (request.endDate().isBefore(request.startDate())) {
+      throw new ScheduleApiException("BAD_REQUEST", "Rango de fechas invalido.", HttpStatus.BAD_REQUEST);
+    }
+    try {
+      return jdbc.queryForObject(
+          """
+          insert into schedule_plan(code,name,schedule_type,start_date,end_date,config)
+          values (?,?,?::schedule_type,?,?,?::jsonb)
+          returning id, code, name, schedule_type::text, status::text, start_date, end_date, created_at, updated_at
+          """,
+          (rs, rowNum) -> plan(rs),
+          request.code(),
+          request.name(),
+          request.scheduleType(),
+          request.startDate(),
+          request.endDate(),
+          toJson(request.config()));
+    } catch (org.springframework.dao.DataIntegrityViolationException ex) {
+      throw new ScheduleApiException("DUPLICATE_CODE", "El codigo ya existe.", HttpStatus.CONFLICT);
+    }
   }
 
   @Transactional
@@ -209,6 +264,30 @@ class ScheduleGenerationService {
                     readList(rs.getString("affected_entities")),
                     rs.getBigDecimal("cost")),
             args.toArray()));
+  }
+
+  @Transactional
+  PlanTransitionResponse approve(long planId, PlanTransitionRequest request) {
+    String status = requirePlan(planId);
+    if (!status.equals("GENERATED") && !status.equals("GENERATED_WITH_CONFLICTS")) {
+      throw new ScheduleApiException("INVALID_PLAN_STATE", "Solo un plan generado puede aprobarse.", HttpStatus.CONFLICT);
+    }
+    long runId = request.runId() == null ? latestRun(planId) : request.runId();
+    requireCompletedRun(planId, runId);
+    jdbc.update("update schedule_plan set status = 'APPROVED'::plan_status, updated_at = now() where id = ?", planId);
+    return new PlanTransitionResponse(planId, "APPROVED", runId);
+  }
+
+  @Transactional
+  PlanTransitionResponse lock(long planId, PlanTransitionRequest request) {
+    String status = requirePlan(planId);
+    if (!status.equals("APPROVED")) {
+      throw new ScheduleApiException("INVALID_PLAN_STATE", "Solo un plan aprobado puede bloquearse.", HttpStatus.CONFLICT);
+    }
+    Long runId = request.runId() == null ? latestRun(planId) : request.runId();
+    requireCompletedRun(planId, runId);
+    jdbc.update("update schedule_plan set status = 'LOCKED'::plan_status, updated_at = now() where id = ?", planId);
+    return new PlanTransitionResponse(planId, "LOCKED", runId);
   }
 
   private ProblemData problem(long planId) {
@@ -441,6 +520,41 @@ class ScheduleGenerationService {
     return statuses.getFirst();
   }
 
+  private String planWhere(String status, String scheduleType, String q, List<Object> args) {
+    List<String> filters = new java.util.ArrayList<>();
+    if (!blank(status)) {
+      filters.add("status = ?::plan_status");
+      args.add(status);
+    }
+    if (!blank(scheduleType)) {
+      filters.add("schedule_type = ?::schedule_type");
+      args.add(scheduleType);
+    }
+    if (!blank(q)) {
+      filters.add("(lower(code) like lower(?) or lower(name) like lower(?))");
+      args.add("%" + q + "%");
+      args.add("%" + q + "%");
+    }
+    return filters.isEmpty() ? "" : " where " + String.join(" and ", filters);
+  }
+
+  private SchedulePlanResponse plan(ResultSet rs) throws SQLException {
+    return new SchedulePlanResponse(
+        rs.getLong("id"),
+        rs.getString("code"),
+        rs.getString("name"),
+        rs.getString("schedule_type"),
+        rs.getString("status"),
+        rs.getObject("start_date", LocalDate.class),
+        rs.getObject("end_date", LocalDate.class),
+        instant(rs, "created_at"),
+        instant(rs, "updated_at"));
+  }
+
+  private static boolean blank(String value) {
+    return value == null || value.isBlank();
+  }
+
   private String validStatus(long planId) {
     String current = requirePlan(planId);
     return current.equals("INVALID_INPUT") ? "DRAFT" : current;
@@ -502,6 +616,24 @@ class ScheduleGenerationService {
       throw new ScheduleApiException("RESOURCE_NOT_FOUND", "El recurso no existe.", HttpStatus.NOT_FOUND);
     }
     return ids.getFirst();
+  }
+
+  private void requireCompletedRun(long planId, long runId) {
+    List<Long> ids =
+        jdbc.queryForList(
+            """
+            select id
+            from schedule_run
+            where plan_id = ?
+              and id = ?
+              and status in ('COMPLETED'::schedule_run_status, 'COMPLETED_WITH_CONFLICTS'::schedule_run_status)
+            """,
+            Long.class,
+            planId,
+            runId);
+    if (ids.isEmpty()) {
+      throw new ScheduleApiException("RESOURCE_NOT_FOUND", "El recurso no existe.", HttpStatus.NOT_FOUND);
+    }
   }
 
   private ScoreResponse score(long runId) {

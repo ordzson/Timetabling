@@ -45,6 +45,18 @@ class ScheduleGenerationController {
     return service.violations(planId, runId, severity);
   }
 
+  @PostMapping("/approve")
+  PlanTransitionResponse approve(
+      @PathVariable("planId") long planId, @RequestBody(required = false) PlanTransitionRequest request) {
+    return service.approve(planId, request == null ? new PlanTransitionRequest(null, null) : request);
+  }
+
+  @PostMapping("/lock")
+  PlanTransitionResponse lock(
+      @PathVariable("planId") long planId, @RequestBody(required = false) PlanTransitionRequest request) {
+    return service.lock(planId, request == null ? new PlanTransitionRequest(null, null) : request);
+  }
+
   @PostMapping("/manual-edits")
   ManualEditResponse manualEdit(
       @PathVariable("planId") long planId, @RequestBody ManualEditRequest request) {
