@@ -2,8 +2,12 @@ import type { ApiError } from '../types/catalog';
 
 const API_BASE = ((import.meta as ImportMeta & { env?: Record<string, string> }).env?.VITE_API_BASE) ?? '';
 
+export function apiUrl(path: string) {
+  return `${API_BASE}${path}`;
+}
+
 export async function api<T>(path: string, init: RequestInit = {}, token?: string): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, {
+  const response = await fetch(apiUrl(path), {
     ...init,
     headers: {
       Accept: 'application/json',
@@ -21,7 +25,7 @@ export async function api<T>(path: string, init: RequestInit = {}, token?: strin
 }
 
 export async function apiForm<T>(path: string, form: FormData, token: string): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, {
+  const response = await fetch(apiUrl(path), {
     method: 'POST',
     headers: {
       Accept: 'application/json',

@@ -1,6 +1,6 @@
 package edu.udeo.horarios.api.security;
 
-record AppUser(
+public record AppUser(
     long id,
     String email,
     String passwordHash,

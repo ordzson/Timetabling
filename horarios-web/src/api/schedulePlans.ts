@@ -5,6 +5,7 @@ import type {
   ManualEditResponse,
   ManualDraft,
   PlanStatus,
+  SchedulePlanDraft,
   SchedulePlanSummary,
   ScheduleResult,
   ValidationResponse,
@@ -13,6 +14,13 @@ import type {
 
 export function listSchedulePlans(query: string, token: string) {
   return api<PageResponse<SchedulePlanSummary>>(`/api/schedule-plans?${query}`, {}, token);
+}
+
+export function createSchedulePlan(draft: SchedulePlanDraft, token: string) {
+  return api<SchedulePlanSummary>('/api/schedule-plans', {
+    method: 'POST',
+    body: JSON.stringify(draft),
+  }, token);
 }
 
 export function validateSchedulePlan(planId: number, token: string) {

@@ -55,9 +55,9 @@
     "semantic_hash": "1e746a090a5638fb54d81f5cb36c3bf2"
   },
   "docs/api-contracts.md": {
-    "mtime": 1781804667.3947897,
-    "ast_hash": "7e1fda78af93c2e54835647c1197bf74",
-    "semantic_hash": "7e1fda78af93c2e54835647c1197bf74"
+    "mtime": 1782426808.300373,
+    "ast_hash": "9811f4ba581b00871ef00fa4532e1528",
+    "semantic_hash": ""
   },
   "docs/database-design.md": {
     "mtime": 1781795082.478337,
@@ -260,8 +260,8 @@
     "semantic_hash": ""
   },
   "horarios-web/src/main.tsx": {
-    "mtime": 1782406877.7688043,
-    "ast_hash": "89357c6ee974df3228eb4950bfbde31b",
+    "mtime": 1782452454.1789222,
+    "ast_hash": "3977a03fa61c2e7e9c560c48dd81589a",
     "semantic_hash": ""
   },
   "horarios-web/tsconfig.json": {
@@ -560,8 +560,8 @@
     "semantic_hash": ""
   },
   "horarios-api/src/main/java/edu/udeo/horarios/api/security/AppUser.java": {
-    "mtime": 1781818674.85255,
-    "ast_hash": "799059d3ca5ab6501f63c9f6e7813d71",
+    "mtime": 1782426607.6640835,
+    "ast_hash": "9eaab7ec98014d6c8715d1129808ed7c",
     "semantic_hash": ""
   },
   "horarios-api/src/main/java/edu/udeo/horarios/api/security/AppUserDto.java": {
@@ -815,8 +815,8 @@
     "semantic_hash": ""
   },
   "horarios-web/src/types/catalog.ts": {
-    "mtime": 1782406877.3549373,
-    "ast_hash": "a8fd023cd6afb1ed1ce2c9fc2f037a2c",
+    "mtime": 1782407684.3895133,
+    "ast_hash": "5d17c84b15fe9c063d89bde645bd8cb1",
     "semantic_hash": ""
   },
   "horarios-web/src/types/import.ts": {
@@ -825,13 +825,88 @@
     "semantic_hash": ""
   },
   "horarios-web/src/types/schedule.ts": {
-    "mtime": 1782406877.632848,
-    "ast_hash": "014f734d748d5f9ad2f4b865f5a92d05",
+    "mtime": 1782408617.7819006,
+    "ast_hash": "bde4509dd311169c3f5ed2011ad280a7",
     "semantic_hash": ""
   },
   "docs/login-regression-checklist.md": {
     "mtime": 1782406882.7732093,
     "ast_hash": "a3e1a9ce794699c617745221b0d79909",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/api/catalogs.ts": {
+    "mtime": 1782407092.5822082,
+    "ast_hash": "1970e6a4d5fbacbcdf7324fc59df1045",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/api/client.ts": {
+    "mtime": 1782418780.2456875,
+    "ast_hash": "e2304d6e2abbaa78ad549e53fd5f24a8",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/api/imports.ts": {
+    "mtime": 1782407092.7152123,
+    "ast_hash": "2a1c11b8002a211a78e8dd88e1415d3c",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/api/schedulePlans.ts": {
+    "mtime": 1782408301.5163615,
+    "ast_hash": "e8498ba1deb98a81791a420596eabf18",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/api/substitutions.ts": {
+    "mtime": 1782407092.9952211,
+    "ast_hash": "925ec2367dbe514ff30633b47b799441",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/components/ActionButton.tsx": {
+    "mtime": 1782407107.450168,
+    "ast_hash": "377cd67ae8892b8feadae347ed90dbeb",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/components/Badge.tsx": {
+    "mtime": 1782407263.985807,
+    "ast_hash": "bc932be01b2dfdca57f4b87161fc86ad",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/components/EmptyState.tsx": {
+    "mtime": 1782407106.9812932,
+    "ast_hash": "fcad9323552726082812354f59ab296b",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/components/StatusBadge.tsx": {
+    "mtime": 1782407264.1158125,
+    "ast_hash": "e00a55aa385e7d623458682d8a0d03e2",
+    "semantic_hash": ""
+  },
+  "horarios-web/src/components/Table.tsx": {
+    "mtime": 1782407107.3089051,
+    "ast_hash": "e9735724c54f2376435ad564f6482510",
+    "semantic_hash": ""
+  },
+  "horarios-api/src/main/java/edu/udeo/horarios/api/catalog/extra/PendingCatalogService.java": {
+    "mtime": 1782426692.2437103,
+    "ast_hash": "f71531c0fe8e6c42d45737e39552c767",
+    "semantic_hash": ""
+  },
+  "horarios-api/src/main/java/edu/udeo/horarios/api/teacher/TeacherAvailabilityController.java": {
+    "mtime": 1782426697.1909668,
+    "ast_hash": "3370b5dc313d24a92ba49a520ddb411d",
+    "semantic_hash": ""
+  },
+  "horarios-api/src/main/resources/db/migration/V2__catalog_pending_api.sql": {
+    "mtime": 1782426548.0365217,
+    "ast_hash": "16b6752f119ca67a9afbe48d451a1346",
+    "semantic_hash": ""
+  },
+  "horarios-api/src/test/java/edu/udeo/horarios/api/catalog/PendingApiControllerTest.java": {
+    "mtime": 1782426766.5594187,
+    "ast_hash": "2fcc7880308331425340bebaaf2f7752",
+    "semantic_hash": ""
+  },
+  "docs/csharp-team-implementation-plan.md": {
+    "mtime": 1782442987.8411229,
+    "ast_hash": "d8adcdcb2f119eaa4c9dfb7ebd49af4a",
     "semantic_hash": ""
   }
 }

@@ -260,8 +260,8 @@
     "semantic_hash": ""
   },
   "horarios-web/src/main.tsx": {
-    "mtime": 1782490404.0763702,
-    "ast_hash": "f527a221d1f26e7143a12726c5e52203",
+    "mtime": 1782455522.7363892,
+    "ast_hash": "c072ddb37d5f28b1e53114f3a6f20792",
     "semantic_hash": ""
   },
   "horarios-web/tsconfig.json": {
@@ -907,16 +907,6 @@
   "docs/csharp-team-implementation-plan.md": {
     "mtime": 1782442987.8411229,
     "ast_hash": "d8adcdcb2f119eaa4c9dfb7ebd49af4a",
-    "semantic_hash": ""
-  },
-  "horarios-web/src/App.tsx": {
-    "mtime": 1782490419.8490472,
-    "ast_hash": "100f7bb31216597d692ec888ce4c0304",
-    "semantic_hash": ""
-  },
-  "horarios-web/src/config/catalogs.ts": {
-    "mtime": 1782490325.3084986,
-    "ast_hash": "1e8976ba63ec134e4ad3d9d59d895e0d",
     "semantic_hash": ""
   }
 }

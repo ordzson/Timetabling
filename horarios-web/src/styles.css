@@ -51,6 +51,14 @@ button {
   box-shadow: var(--shadow-sm);
 }
 
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--cyan);
+  outline-offset: 3px;
+}
+
 button:disabled {
   cursor: not-allowed;
   opacity: 0.55;
@@ -557,8 +565,114 @@ nav button.active {
   align-items: start;
 }
 
+.teachers-page {
+  grid-template-columns: 360px minmax(0, 1fr);
+}
+
 .time-page {
-  grid-template-columns: minmax(0, 1fr) 340px;
+  grid-template-columns: 360px minmax(0, 1fr);
+}
+
+.rooms-page {
+  display: grid;
+  gap: 20px;
+}
+
+.rooms-workspace {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.room-builder {
+  position: sticky;
+  top: 96px;
+  align-content: start;
+}
+
+.room-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.room-type-field {
+  display: grid;
+  gap: 8px;
+  color: var(--muted-ink);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.room-type-picker {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.room-type-picker button {
+  min-height: 64px;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 2px;
+  padding: 8px 10px;
+  text-align: left;
+  white-space: normal;
+  box-shadow: none;
+}
+
+.room-type-picker button span,
+.room-preview span,
+.room-preview small,
+.room-name small {
+  color: var(--muted-ink);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.room-type-picker button.active {
+  background: var(--primary);
+  color: #ffffff;
+  transform: translate(2px, 2px);
+}
+
+.room-type-picker button.active span {
+  color: #ffffff;
+}
+
+.room-preview {
+  display: grid;
+  gap: 4px;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: var(--surface-muted);
+  padding: 12px;
+}
+
+.room-preview span {
+  font-family: "Space Grotesk", "Work Sans", ui-sans-serif, system-ui, sans-serif;
+  text-transform: uppercase;
+}
+
+.room-preview strong {
+  font-size: 1.05rem;
+}
+
+.room-preview.invalid {
+  border-color: var(--warning-strong);
+  background: var(--warning);
+}
+
+.room-preview.invalid span,
+.room-preview.invalid small {
+  color: var(--warning-strong);
+}
+
+.room-name {
+  display: grid;
+  gap: 2px;
 }
 
 .catalog-main {
@@ -567,12 +681,99 @@ nav button.active {
   gap: 14px;
 }
 
+.time-builder {
+  position: sticky;
+  top: 96px;
+  align-content: start;
+}
+
+.time-presets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 8px;
+}
+
+.time-presets button {
+  min-height: 58px;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 2px;
+  padding: 8px 10px;
+  text-align: left;
+  box-shadow: none;
+}
+
+.time-presets button span,
+.time-range small,
+.time-preview span,
+.time-preview small {
+  color: var(--muted-ink);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.time-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.time-form-grid label:last-child {
+  grid-column: 1 / -1;
+}
+
+.time-preview {
+  display: grid;
+  gap: 4px;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: var(--surface-muted);
+  padding: 12px;
+}
+
+.time-preview span {
+  font-family: "Space Grotesk", "Work Sans", ui-sans-serif, system-ui, sans-serif;
+  text-transform: uppercase;
+}
+
+.time-preview strong {
+  font-size: 1.05rem;
+}
+
+.time-preview.invalid {
+  border-color: var(--warning-strong);
+  background: var(--warning);
+}
+
+.time-preview.invalid span,
+.time-preview.invalid small {
+  color: var(--warning-strong);
+}
+
+.time-range {
+  display: grid;
+  gap: 2px;
+}
+
 .academic-flow {
   display: grid;
   grid-template-columns: repeat(4, minmax(180px, 1fr));
   gap: 14px;
   overflow-x: auto;
   padding-bottom: 8px;
+}
+
+.career-editor {
+  position: sticky;
+  top: 96px;
+  align-content: start;
+}
+
+.career-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
 
 .academic-step {
@@ -595,11 +796,101 @@ nav button.active {
 
 .relation-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 14px;
 }
 
-.pending-panel {
+.teacher-assignment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.teacher-sidebar {
+  position: sticky;
+  top: 96px;
+}
+
+.teacher-selected,
+.teacher-workbench,
+.teacher-flow-step {
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  background: var(--paper);
+}
+
+.teacher-selected {
+  display: grid;
+  gap: 4px;
+  background: var(--surface-muted);
+  padding: 12px;
+}
+
+.teacher-selected span,
+.teacher-selected small,
+.teacher-flow-step span,
+.teacher-flow-step small {
+  color: var(--muted-ink);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.teacher-selected span,
+.teacher-flow-step span {
+  font-family: "Space Grotesk", "Work Sans", ui-sans-serif, system-ui, sans-serif;
+  text-transform: uppercase;
+}
+
+.teacher-selected strong {
+  overflow-wrap: anywhere;
+  font-size: 1rem;
+}
+
+.teacher-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.teacher-form-grid label:first-child,
+.teacher-form-grid .checkbox {
+  grid-column: 1 / -1;
+}
+
+.teacher-workbench {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.teacher-flow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.teacher-flow-step {
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  min-height: 88px;
+  background: var(--surface-muted);
+  padding: 12px;
+}
+
+.teacher-flow-step strong {
+  overflow-wrap: anywhere;
+}
+
+.row-button {
+  min-height: 32px;
+  padding: 0 10px;
+  box-shadow: none;
+}
+
+.relation-panel {
+  min-width: 0;
   display: grid;
   align-content: start;
   gap: 12px;
@@ -608,6 +899,17 @@ nav button.active {
   background: var(--paper);
   padding: 14px;
   box-shadow: var(--shadow-sm);
+}
+
+.relation-panel p,
+.relation-panel small {
+  margin: 0;
+  color: var(--muted-ink);
+  font-size: 0.88rem;
+}
+
+.relation-panel small {
+  font-weight: 700;
 }
 
 .availability-matrix {
@@ -620,7 +922,7 @@ nav button.active {
   box-shadow: var(--shadow-md);
 }
 
-.pending-panel .availability-matrix {
+.relation-panel .availability-matrix {
   grid-template-columns: 72px repeat(5, minmax(92px, 1fr));
   box-shadow: none;
 }
@@ -674,6 +976,7 @@ nav button.active {
 }
 
 .table-wrap {
+  max-width: 100%;
   overflow-x: auto;
   border: 2px solid var(--ink);
   border-radius: 8px;
@@ -729,7 +1032,7 @@ nav button.active {
   background: currentColor;
 }
 
-.api-pending {
+.data-notice {
   display: grid;
   gap: 4px;
   border: 2px solid var(--warning-strong);
@@ -740,9 +1043,14 @@ nav button.active {
   font-size: 0.86rem;
 }
 
-.api-pending strong {
+.data-notice strong {
   font-family: "Space Grotesk", "Work Sans", ui-sans-serif, system-ui, sans-serif;
   text-transform: uppercase;
+}
+
+.catalog-mini {
+  display: grid;
+  gap: 10px;
 }
 
 table {
@@ -771,9 +1079,55 @@ tr:last-child td {
   border-bottom: 0;
 }
 
+.selected-row td {
+  background: var(--primary-soft);
+  font-weight: 700;
+}
+
 .form-panel {
   display: grid;
   gap: 14px;
+}
+
+.inline-form {
+  display: grid;
+  gap: 12px;
+  border-top: 2px solid var(--ink);
+  padding-top: 14px;
+}
+
+.inline-form h3 {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", "Work Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: 1rem;
+}
+
+.inline-form button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.form-panel button svg {
+  vertical-align: -3px;
+}
+
+.selected-plan-detail {
+  display: grid;
+  gap: 6px;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: var(--surface-muted);
+  padding: 10px;
+}
+
+.selected-plan-detail span,
+.selected-plan-detail small {
+  color: var(--muted-ink);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
 .summary-grid {
@@ -812,9 +1166,37 @@ tr:last-child td {
   gap: 10px;
 }
 
+.plan-action {
+  display: grid;
+  gap: 4px;
+}
+
+.plan-action small {
+  min-height: 18px;
+  color: var(--muted-ink);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.score-breakdown {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.score-breakdown span {
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  background: var(--surface-muted);
+  padding: 4px 7px;
+  color: var(--muted-ink);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
 .filters {
   display: grid;
-  grid-template-columns: repeat(2, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 12px;
 }
 
@@ -934,6 +1316,11 @@ tr:last-child td {
   touch-action: none;
 }
 
+.session-block.read-only {
+  cursor: default;
+  touch-action: auto;
+}
+
 .session-block.pinned {
   background: var(--surface-muted);
 }
@@ -1013,8 +1400,17 @@ tr:last-child td {
 }
 
 .conflict-list p {
+  display: grid;
+  gap: 3px;
   color: var(--muted-ink);
   font-size: 0.86rem;
+}
+
+.conflict-list small {
+  color: var(--muted-ink);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
 .conflict-list.danger {
@@ -1050,6 +1446,25 @@ tr:last-child td {
   grid-template-columns: repeat(3, minmax(160px, 1fr));
   gap: 12px;
   align-items: end;
+}
+
+.reports-page {
+  display: grid;
+  gap: 14px;
+}
+
+.row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.row-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 10px;
 }
 
 .checkbox {
@@ -1110,6 +1525,7 @@ tr:last-child td {
 @media (max-width: 900px) {
   .admin-shell,
   .catalog-layout,
+  .rooms-workspace,
   .work-layout,
   .plans-page,
   .academia-page,
@@ -1131,7 +1547,27 @@ tr:last-child td {
 
   .filters,
   .lns-result,
+  .teacher-assignment-grid,
+  .teacher-flow,
   .relation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .teacher-sidebar {
+    position: static;
+  }
+
+  .time-builder {
+    position: static;
+  }
+
+  .room-builder {
+    position: static;
+  }
+
+  .teacher-form-grid,
+  .room-form-grid,
+  .room-type-picker {
     grid-template-columns: 1fr;
   }
 
@@ -1175,6 +1611,10 @@ tr:last-child td {
 
 @media (max-width: 560px) {
   .dashboard-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .time-form-grid {
     grid-template-columns: 1fr;
   }
 

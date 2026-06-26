@@ -1,16 +1,16 @@
 # Graph Report - horarios  (2026-06-25)
 
 ## Corpus Check
-- 160 files · ~56,757 words
+- 175 files · ~71,100 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1795 nodes · 3387 edges · 127 communities (107 shown, 20 thin omitted)
-- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 346 edges (avg confidence: 0.81)
+- 1982 nodes · 3829 edges · 130 communities (112 shown, 18 thin omitted)
+- Extraction: 89% EXTRACTED · 11% INFERRED · 0% AMBIGUOUS · INFERRED: 424 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `cb8df666`
+- Built from commit: `32696e16`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -92,6 +92,7 @@
 - [[_COMMUNITY_Community 95|Community 95]]
 - [[_COMMUNITY_Community 96|Community 96]]
 - [[_COMMUNITY_Community 97|Community 97]]
+- [[_COMMUNITY_Community 99|Community 99]]
 - [[_COMMUNITY_Community 101|Community 101]]
 - [[_COMMUNITY_Community 102|Community 102]]
 - [[_COMMUNITY_Community 103|Community 103]]
@@ -107,12 +108,14 @@
 - [[_COMMUNITY_Community 118|Community 118]]
 - [[_COMMUNITY_Community 119|Community 119]]
 - [[_COMMUNITY_Community 120|Community 120]]
-- [[_COMMUNITY_Community 121|Community 121]]
-- [[_COMMUNITY_Community 122|Community 122]]
 - [[_COMMUNITY_Community 123|Community 123]]
 - [[_COMMUNITY_Community 124|Community 124]]
+- [[_COMMUNITY_Community 125|Community 125]]
 - [[_COMMUNITY_Community 126|Community 126]]
 - [[_COMMUNITY_Community 127|Community 127]]
+- [[_COMMUNITY_Community 128|Community 128]]
+- [[_COMMUNITY_Community 129|Community 129]]
+- [[_COMMUNITY_Community 131|Community 131]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `AcademicImportService` - 43 edges
@@ -123,8 +126,8 @@
 6. `Endpoints` - 25 edges
 7. `ReportService` - 23 edges
 8. `Tareas UIO` - 23 edges
-9. `Backlog ejecutable para agentes AI` - 22 edges
-10. `Plan del motor generador de horarios` - 20 edges
+9. `api()` - 22 edges
+10. `Backlog ejecutable para agentes AI` - 22 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Area Comun` --semantically_similar_to--> `common_area_rule`  [INFERRED] [semantically similar]
@@ -141,11 +144,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (127 total, 20 thin omitted)
+## Communities (130 total, 18 thin omitted)
 
 ### Community 0 - "API and Persistence"
-Cohesion: 0.07
-Nodes (30): AcademicCatalogService, isBlockRangeValid(), CourseEntity, CareerEntity, CareerRepository, RequestMapper, ConstraintViolation, CourseEntity (+22 more)
+Cohesion: 0.12
+Nodes (16): 12. Dependencias entre modulos, 13. Orden recomendado de PR, 15. Definition of Done, 16. Reglas para equipo junior, 17. Riesgos y mitigaciones, 18. Integracion final esperada, 19. Glosario, 1. Objetivo general (+8 more)
 
 ### Community 1 - "Candidate Ranking"
 Cohesion: 0.17
@@ -156,16 +159,16 @@ Cohesion: 0.09
 Nodes (18): AssertTrue, Long, Object, Override, Pageable, PageResponse, PatchMapper, RequestMapper (+10 more)
 
 ### Community 3 - "Schedule Indexes"
-Cohesion: 0.21
-Nodes (11): endMinuteOfWeek(), overlaps(), TimeRange, Assignment, Comparator, Long, NeighborhoodCause, RepairNeighborhood (+3 more)
-
-### Community 4 - "Prevalidation Tests"
 Cohesion: 0.05
 Nodes (43): CatalogService, PatchMapper, E, Class, LocalTime, Map, Object, RequestValidationException (+35 more)
 
+### Community 4 - "Prevalidation Tests"
+Cohesion: 0.32
+Nodes (6): Assignment, List, Long, Map, Optional, Schedule
+
 ### Community 5 - "Prevalidation Rules"
-Cohesion: 0.05
-Nodes (48): Assignment, SchedulableSession, Assignment, CandidateSpace, List, MoveProposal, SchedulableSession, Schedule (+40 more)
+Cohesion: 0.17
+Nodes (11): Assignment, CandidateSpace, List, MoveProposal, SchedulableSession, Schedule, SchedulingProblem, Score (+3 more)
 
 ### Community 6 - "Hard Constraints"
 Cohesion: 0.19
@@ -176,16 +179,16 @@ Cohesion: 0.12
 Nodes (23): ProblemPreValidator, Course, List, Long, Map, PreValidationIssue, Room, SchedulingProblem (+15 more)
 
 ### Community 8 - "Session Factory"
-Cohesion: 0.15
-Nodes (15): CommonAreaMerger, List, SchedulableSession, SchedulableSession, Cohort, CurriculumCourse, List, SchedulableSession (+7 more)
+Cohesion: 0.08
+Nodes (28): CommonAreaMerger, ResponseStatusException, AppUser, AppUserDto, AppUserRepository, Clock, GetMapping, JwtService (+20 more)
 
 ### Community 9 - "Common Area Merge"
 Cohesion: 0.08
 Nodes (31): DifficultyRanker, Candidate, CandidateSpace, Comparator, ScheduleResult, SchedulingProblem, SessionFactory, CandidateSpace (+23 more)
 
 ### Community 10 - "T06 Solver Plan"
-Cohesion: 0.10
-Nodes (30): Codes, DataFormatter, Date, ImportErrorResponse, ImportMode, ImportResponse, Integer, JdbcClient (+22 more)
+Cohesion: 0.06
+Nodes (52): Authentication, AvailabilityRequest, AvailabilityResponse, Codes, DataFormatter, Date, ImportErrorResponse, ImportMode (+44 more)
 
 ### Community 11 - "Scheduling Problem"
 Cohesion: 0.08
@@ -224,32 +227,32 @@ Cohesion: 0.25
 Nodes (8): T06 - constructive-solver, POST /api/schedule-plans/{id}/generate, CandidateSpace, HardConstraintChecker, SchedulableSession, Schedule, ScheduleProblem, AdminShell
 
 ### Community 20 - "Teacher Continuity"
-Cohesion: 0.29
-Nodes (7): OpenPDF y Apache POI, T13 - solver-sa, GET /api/reports/schedule-plans/{id}, schedule_run, schedule_violation, Score, ConflictPanel
+Cohesion: 0.16
+Nodes (17): RequestValidationException, PendingCatalogService, FieldErrorDto, List, JdbcClient, List, Long, Map (+9 more)
 
 ### Community 21 - "Community 21"
-Cohesion: 0.20
-Nodes (6): DomainCoreTest, distanceTo(), Test, Test, RoomCoordinate, SolverBenchmarkContractTest
+Cohesion: 0.13
+Nodes (11): DomainCoreTest, distanceTo(), Test, Assignment, List, Room, Schedule, Test (+3 more)
 
 ### Community 22 - "Candidate Space File"
 Cohesion: 0.15
 Nodes (18): AssignmentRow, CellStyle, Document, Instant, JdbcTemplate, List, Long, ResultSet (+10 more)
 
 ### Community 23 - "Community 23"
-Cohesion: 0.10
-Nodes (20): Fixture, Schedule, Override, Score, Cohort, Course, CurriculumCourse, Long (+12 more)
+Cohesion: 0.12
+Nodes (15): Fixture, Schedule, Cohort, Course, CurriculumCourse, Long, Room, Schedule (+7 more)
 
 ### Community 24 - "Issue Severity File"
 Cohesion: 0.48
 Nodes (6): Cohort, CurriculumCourse, List, Room, Teacher, SchedulingProblem()
 
 ### Community 25 - "Schedule Result File"
-Cohesion: 0.25
-Nodes (8): Motor Propio con Constructiva SA y LNS, T15 - manual-edit-lns, NeighborhoodRepairer, Busqueda de Gran Vecindario, Heuristica Constructiva, Heuristica Constructiva Recocido Simulado LNS, Pisinger and Ropke 2010, Recocido Simulado
+Cohesion: 0.14
+Nodes (14): Motor Propio con Constructiva SA y LNS, T15 - manual-edit-lns, GET /api/schedule-plans/{id}/result, Idempotency-Key, POST /api/schedule-plans/{id}/manual-edits, manual_edit, ManualEditCommand, NeighborhoodRepairer (+6 more)
 
 ### Community 26 - "Unassigned Session File"
-Cohesion: 0.40
-Nodes (6): JWT y Roles, POST /api/auth/login, POST /api/imports/academic-data, app_user, import_batch, import_error
+Cohesion: 0.21
+Nodes (12): JWT y Roles, POST /api/auth/login, POST /api/imports/academic-data, app_user, career, cohort, common_area_career, curriculum (+4 more)
 
 ### Community 27 - "Community 27"
 Cohesion: 0.50
@@ -292,16 +295,16 @@ Cohesion: 0.11
 Nodes (17): compilerOptions, allowJs, allowSyntheticDefaultImports, esModuleInterop, forceConsistentCasingInFileNames, isolatedModules, jsx, lib (+9 more)
 
 ### Community 54 - "Community 54"
-Cohesion: 0.09
-Nodes (21): React TypeScript dnd-kit shadcn/ui, horarios-web, `AdminShell`, Base de diseno UI, `CatalogPages`, Color, Componentes a construir, `ConflictPanel` (+13 more)
+Cohesion: 0.14
+Nodes (13): React TypeScript dnd-kit shadcn/ui, horarios-web, Base de diseno UI, Color, Direccion visual, Estados visuales, Forma y espacio, Objetivo (+5 more)
 
 ### Community 55 - "Community 55"
 Cohesion: 0.12
 Nodes (15): 10. Puntos para la defensa académica, 1. Naturaleza del problema, 2. Datos confirmados del cliente, 3. Comportamiento del sistema ya decidido, 4. Restricción técnica no negociable, 5. Equipo y entrega, 6. Stack técnico acordado, 7. Algoritmo elegido: Hybrid Metaheuristic (+7 more)
 
 ### Community 56 - "Community 56"
-Cohesion: 0.10
-Nodes (18): BadRequestException, NotFoundException, RequestValidationException, String, String, FieldErrorDto, List, RuntimeException (+10 more)
+Cohesion: 0.08
+Nodes (25): BadRequestException, NotFoundException, FilterChain, String, String, RuntimeException, AppUserRepository, Clock (+17 more)
 
 ### Community 57 - "Community 57"
 Cohesion: 0.13
@@ -312,8 +315,8 @@ Cohesion: 0.13
 Nodes (14): Catálogos académicos, DER resumido, Diseño de base de datos, Docentes, aulas y recursos, Edición manual y sustituciones, Importación, Planes, sesiones y corridas, Principios (+6 more)
 
 ### Community 59 - "Community 59"
-Cohesion: 0.08
-Nodes (21): CatalogControllerTest, GetMapping, Long, ResponseEntity, String, String, Test, Sheet (+13 more)
+Cohesion: 0.07
+Nodes (24): CatalogControllerTest, PendingApiControllerTest, GetMapping, Long, ResponseEntity, String, String, Test (+16 more)
 
 ### Community 60 - "Community 60"
 Cohesion: 0.19
@@ -364,48 +367,56 @@ Cohesion: 0.33
 Nodes (5): Backend y motor, Frontend, Horarios UdeO/UTP, Regla de dependencias, Requisitos
 
 ### Community 75 - "Community 75"
-Cohesion: 0.07
-Nodes (35): AnnealingOptimizer, HorariosApiApplication, BenchmarkOptions, BenchmarkResult, Duration, HardConstraintChecker, String, AnnealingConfig (+27 more)
+Cohesion: 0.06
+Nodes (40): AnnealingOptimizer, HorariosApiApplication, BenchmarkOptions, BenchmarkResult, Duration, HardConstraintChecker, String, AnnealingConfig (+32 more)
 
 ### Community 77 - "Community 77"
 Cohesion: 0.67
 Nodes (3): requirePositive(), requireText(), String
+
+### Community 81 - "Community 81"
+Cohesion: 0.03
+Nodes (24): ActionButton(), EmptyState(), Table(), actionReason(), AVAILABILITY_STATES, CATALOGS, COHORTS_CATALOG, COMMON_AREA_CAREERS_CATALOG (+16 more)
 
 ### Community 94 - "Community 94"
 Cohesion: 0.11
 Nodes (16): GenerationRequest, GenerationResponse, GetMapping, Long, ManualEditRequest, ManualEditResponse, PlanTransitionRequest, PlanTransitionResponse (+8 more)
 
 ### Community 95 - "Community 95"
-Cohesion: 0.07
-Nodes (30): FilterChain, ResponseStatusException, AppUser, JdbcClient, Long, Optional, ResultSet, String (+22 more)
+Cohesion: 0.29
+Nodes (8): Assignment, SchedulableSession, Assignment, List, Long, Test, toAssignment(), ScheduleTest
 
 ### Community 96 - "Community 96"
 Cohesion: 0.60
 Nodes (3): TimeConfig, Bean, Clock
 
 ### Community 97 - "Community 97"
-Cohesion: 0.50
-Nodes (3): AppUser, AppUserDto, from()
+Cohesion: 0.20
+Nodes (10): 10. Plan por fases, Fase 0 - Alineacion, Fase 1 - Fundacion tecnica, Fase 2 - Base de datos compartida, Fase 3 - Verticales de catalogos y seguridad, Fase 4 - Importacion y calidad de datos, Fase 5 - Dominio y motor constructivo, Fase 6 - Planes, generacion y resultado (+2 more)
+
+### Community 99 - "Community 99"
+Cohesion: 0.25
+Nodes (8): `AdminShell`, `CatalogPages`, Componentes a construir, `ConflictPanel`, `PublishedSchedulePage`, `ScheduleGrid`, `SchedulePlanPage`, `TeacherAvailabilityPage`
 
 ### Community 101 - "Community 101"
-Cohesion: 0.19
-Nodes (15): Assignment, Comparator, List, Long, ManualEditCommand, RepairNeighborhood, RepairResult, RepairViolation (+7 more)
+Cohesion: 0.06
+Nodes (44): endMinuteOfWeek(), overlaps(), Entry, TimeRange, Assignment, Course, List, Room (+36 more)
 
 ### Community 102 - "Community 102"
-Cohesion: 0.14
-Nodes (13): Assignment, GenerationResponse, GridView, ManualDraft, ManualEditResponse, PlanStatus, SchedulePlanSummary, ScheduleResult (+5 more)
+Cohesion: 0.12
+Nodes (27): api(), approveSchedulePlan(), createSchedulePlan(), generateSchedulePlan(), getScheduleResult(), listSchedulePlans(), listScheduleViolations(), lockSchedulePlan() (+19 more)
 
 ### Community 103 - "Community 103"
 Cohesion: 0.23
 Nodes (8): Assignment, Candidate, CandidateSpace, Comparator, List, MoveProposal, Schedule, MoveGenerator
 
 ### Community 104 - "Community 104"
-Cohesion: 0.32
-Nodes (6): List, SchedulableSession, Schedule, SchedulingProblem, Test, NeighborhoodRepairerTest
+Cohesion: 0.05
+Nodes (37): AcademicCatalogService, isBlockRangeValid(), CourseEntity, CareerEntity, CareerRepository, RequestMapper, ConstraintViolation, CourseEntity (+29 more)
 
 ### Community 105 - "Community 105"
-Cohesion: 0.27
-Nodes (9): Assignment, Course, List, Room, SchedulableSession, Schedule, SchedulingProblem, TimeGrid (+1 more)
+Cohesion: 0.33
+Nodes (7): ErrorResponse, ExceptionHandler, HttpServletRequest, ResponseEntity, String, ScheduleApiException, ScheduleApiExceptionHandler
 
 ### Community 106 - "Community 106"
 Cohesion: 0.33
@@ -420,60 +431,72 @@ Cohesion: 0.21
 Nodes (13): BadRequestException, CatalogController, CatalogService, GetMapping, List, Long, Object, Pageable (+5 more)
 
 ### Community 115 - "Community 115"
-Cohesion: 0.33
-Nodes (5): AdminView, ApiError, Catalog, Field, PageResponse
+Cohesion: 0.16
+Nodes (15): createCatalogItem(), listCatalog(), apiForm(), apiUrl(), formatApiError(), importAcademicData(), listImportErrors(), AdminView (+7 more)
 
 ### Community 116 - "Community 116"
-Cohesion: 0.33
-Nodes (7): ErrorResponse, ExceptionHandler, HttpServletRequest, ResponseEntity, String, ScheduleApiException, ScheduleApiExceptionHandler
+Cohesion: 0.22
+Nodes (9): 11. Backlog por persona, de primero a ultimo, R1 - Seguridad, usuarios, plataforma base e integracion, R2 - Catalogos academicos y areas comunes, R3 - Docentes, disponibilidad y carga, R4 - Tiempo, aulas, recursos y restricciones fisicas, R5 - Importacion CSV/XLSX y calidad de datos, R6 - Planes de horario y motor constructivo, R7 - Optimizacion, edicion manual LNS y grilla (+1 more)
 
 ### Community 117 - "Community 117"
 Cohesion: 0.36
 Nodes (5): CommandLineRunner, DataInitializer, JdbcClient, Override, PasswordEncoder
 
 ### Community 118 - "Community 118"
-Cohesion: 0.67
-Nodes (3): api(), apiForm(), formatApiError()
+Cohesion: 0.22
+Nodes (7): MoveEvaluation, MoveProposal, Schedule, MoveProposal, String, applicable(), rejected()
 
 ### Community 120 - "Community 120"
 Cohesion: 0.50
 Nodes (3): Role, Session, User
 
-### Community 121 - "Community 121"
-Cohesion: 0.50
-Nodes (3): ImportErrorRow, ImportResponse, ImportSummary
+### Community 123 - "Community 123"
+Cohesion: 0.40
+Nodes (5): 14.1 Unitarias, 14.2 Integracion API/DB, 14.3 Frontend, 14.4 Benchmarks, 14. Plan de pruebas
 
-### Community 122 - "Community 122"
-Cohesion: 0.47
-Nodes (6): career, cohort, common_area_career, curriculum, schedule_session_cohort, section_suggestion
+### Community 125 - "Community 125"
+Cohesion: 0.40
+Nodes (5): 7.1 Estados del plan, 7.2 Respuesta de error comun, 7.3 Paginacion comun, 7.4 Endpoints clave, 7. Contratos comunes entre modulos
 
 ### Community 126 - "Community 126"
 Cohesion: 0.33
-Nodes (6): PostgreSQL y JSONB, T02 - database-migration, exam_plan view, schedule_plan, SchedulingContext, Estados del Horario
+Nodes (4): MoveEvaluation, MoveProposal, Schedule, MoveApplier
 
 ### Community 127 - "Community 127"
-Cohesion: 0.33
-Nodes (6): GET /api/schedule-plans/{id}/result, Idempotency-Key, POST /api/schedule-plans/{id}/manual-edits, manual_edit, ManualEditCommand, ScheduleGrid
+Cohesion: 0.50
+Nodes (4): 8.1 Enums, 8.2 Tablas por owner, 8.3 Reglas que viven en motor, no en DB, 8. Modelo de datos minimo
+
+### Community 128 - "Community 128"
+Cohesion: 0.50
+Nodes (3): Badge(), StatusBadge(), TONES
+
+### Community 129 - "Community 129"
+Cohesion: 0.15
+Nodes (13): PostgreSQL y JSONB, OpenPDF y Apache POI, T02 - database-migration, T13 - solver-sa, GET /api/reports/schedule-plans/{id}, exam_plan view, schedule_plan, schedule_run (+5 more)
+
+### Community 131 - "Community 131"
+Cohesion: 0.67
+Nodes (3): 4.1 Pila objetivo, 4.2 Por que no cambiar el frontend a Blazor, 4. Decisiones tecnicas
 
 ## Knowledge Gaps
-- **442 isolated node(s):** `String`, `Long`, `Long`, `String`, `Long` (+437 more)
+- **505 isolated node(s):** `String`, `Long`, `Long`, `String`, `Long` (+500 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **18 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `schedule_plan` connect `Community 126` to `Frontend and LNS`, `Project Planning`, `Teacher Continuity`, `Community 122`, `Community 127`?**
-  _High betweenness centrality (0.135) - this node is a cross-community bridge._
-- **Why does `HttpStatus` connect `Community 28` to `Hard Constraints`, `Scheduling Problem`, `Timetabling Research`, `Community 114`, `C4 Architecture`, `Candidate Space File`, `Community 59`, `Community 95`?**
-  _High betweenness centrality (0.082) - this node is a cross-community bridge._
-- **Why does `schedule_run` connect `Teacher Continuity` to `Community 126`, `Room Types`, `Project Planning`, `Community 127`?**
-  _High betweenness centrality (0.042) - this node is a cross-community bridge._
+- **Why does `schedule_plan` connect `Community 129` to `Schedule Result File`, `Unassigned Session File`, `Project Planning`, `Frontend and LNS`?**
+  _High betweenness centrality (0.078) - this node is a cross-community bridge._
+- **Why does `HttpStatus` connect `Community 28` to `Hard Constraints`, `Session Factory`, `Scheduling Problem`, `Timetabling Research`, `Community 114`, `C4 Architecture`, `Candidate Space File`, `Community 56`, `Community 59`?**
+  _High betweenness centrality (0.070) - this node is a cross-community bridge._
+- **Why does `Backlog ejecutable para agentes AI` connect `Community 40` to `Community 129`, `Room Types`, `Schedule Result File`?**
+  _High betweenness centrality (0.028) - this node is a cross-community bridge._
 - **Are the 4 inferred relationships involving `toAssignment()` (e.g. with `.fixture()` and `.schedule()`) actually correct?**
   _`toAssignment()` has 4 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `String`, `Long`, `Long` to the rest of the system?**
-  _452 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _515 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `API and Persistence` be split into smaller, more focused modules?**
-  _Cohesion score 0.06610169491525424 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected._
 - **Should `Domain Assignments` be split into smaller, more focused modules?**
   _Cohesion score 0.09358974358974359 - nodes in this community are weakly interconnected._

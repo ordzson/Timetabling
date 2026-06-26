@@ -1,11 +1,12 @@
 export type ValidationIssue = {
-  id: number;
+  id: number | null;
   severity: string;
   code: string;
   entityType: string;
-  entityId: number;
+  entityId: number | null;
   message: string;
   suggestedAction?: string;
+  source?: Record<string, unknown>;
 };
 
 export type SchedulePlanSummary = {
@@ -18,6 +19,15 @@ export type SchedulePlanSummary = {
   endDate: string;
   createdAt: string;
   updatedAt: string;
+};
+
+export type SchedulePlanDraft = {
+  code: string;
+  name: string;
+  scheduleType: string;
+  startDate: string;
+  endDate: string;
+  config: Record<string, number>;
 };
 
 export type ValidationResponse = {
@@ -55,6 +65,7 @@ export type Violation = {
   severity: string;
   code: string;
   message: string;
+  affectedEntities?: Record<string, unknown>[];
   cost?: number;
 };
 
@@ -64,16 +75,23 @@ export type Assignment = {
   courseId: number;
   courseCode: string;
   courseName: string;
-  teacherId: number;
-  teacherName: string;
-  roomId: number;
-  roomCode: string;
+  teacherId: number | null;
+  teacherName: string | null;
+  roomId: number | null;
+  roomCode: string | null;
   cohortIds: number[];
   dayOfWeek: number;
   startBlock: number;
-  durationBlocks: number;
+  durationBlocks: number | null;
   status: string;
   pinned: boolean;
+};
+
+export type UnassignedSession = {
+  sessionId: number;
+  courseId: number;
+  courseCode: string;
+  reason: string;
 };
 
 export type ScheduleResult = {
@@ -82,7 +100,7 @@ export type ScheduleResult = {
   planStatus: PlanStatus;
   score?: Record<string, number>;
   assignments: Assignment[];
-  unassigned: Assignment[];
+  unassigned: UnassignedSession[];
 };
 
 export type ManualEditResponse = {

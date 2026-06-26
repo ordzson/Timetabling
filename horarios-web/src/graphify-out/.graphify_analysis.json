@@ -7,44 +7,161 @@
       "main_adminshell",
       "main_app",
       "main_availability_states",
+      "main_availabilitycell",
+      "main_availabilitycells",
+      "main_availabilitylabel",
       "main_availabilitymatrix",
       "main_availabilitypage",
+      "main_availabilitypayload",
       "main_catalogfield",
-      "main_catalogpage",
       "main_catalogs",
+      "main_cohorts_catalog",
+      "main_common_area_careers_catalog",
+      "main_common_areas_catalog",
+      "main_conflictentity",
       "main_conflictlist",
       "main_conflictpanel",
+      "main_curricula_catalog",
+      "main_curriculum_courses_catalog",
       "main_dashboardhome",
       "main_days",
       "main_defaultvalues",
+      "main_dndschedulegrid",
+      "main_droppablegridcell",
       "main_errorbox",
+      "main_fixed_breaks_catalog",
       "main_gridcell",
-      "main_gridoptions",
+      "main_import_sheets",
       "main_importwizard",
       "main_login",
-      "main_manualeditdrawer",
       "main_manualeditsummary",
       "main_matchesgridfilter",
       "main_metric",
       "main_nav_items",
+      "main_nextavailabilitypreference",
       "main_normalizepayload",
+      "main_notice",
       "main_pendingpanel",
+      "main_planactionbutton",
+      "main_preferencefromlabel",
       "main_readsession",
+      "main_recordid",
+      "main_relationdefaults",
+      "main_relationfield",
+      "main_relationfieldcontrol",
+      "main_relationlookupkey",
+      "main_relationpayload",
+      "main_reportspage",
+      "main_roomspage",
       "main_schedulegrid",
-      "main_scheduleplanpage",
+      "main_schedulegridbody",
+      "main_scorebreakdown",
       "main_sessionblock",
-      "main_sessioncard",
+      "main_staticsessionblock",
       "main_substitutionpanel",
-      "main_teacherspage",
+      "main_teacheravailabilityitem",
+      "main_teacheravailabilityresponse",
+      "main_teacherflowstep",
+      "main_teacherrelationconfig",
+      "main_technical_columns",
       "main_timepage",
       "main_totimeblockid"
     ],
     "1": [
+      "app",
+      "app_academiapage",
+      "app_academicstep",
+      "app_adminshell",
+      "app_app",
+      "app_availability_states",
+      "app_availabilitycell",
+      "app_availabilitycells",
+      "app_availabilitylabel",
+      "app_availabilitymatrix",
+      "app_availabilitypage",
+      "app_availabilitypayload",
+      "app_catalogfield",
+      "app_conflictentity",
+      "app_conflictlist",
+      "app_conflictpanel",
+      "app_dashboardhome",
+      "app_days",
+      "app_defaultvalues",
+      "app_dndschedulegrid",
+      "app_droppablegridcell",
+      "app_errorbox",
+      "app_gridcell",
+      "app_import_sheets",
+      "app_importwizard",
+      "app_login",
+      "app_manualeditsummary",
+      "app_matchesgridfilter",
+      "app_metric",
+      "app_nav_items",
+      "app_nextavailabilitypreference",
+      "app_normalizepayload",
+      "app_notice",
+      "app_planactionbutton",
+      "app_preferencefromlabel",
+      "app_readsession",
+      "app_recordid",
+      "app_relationdefaults",
+      "app_relationfieldcontrol",
+      "app_relationpayload",
+      "app_reportspage",
+      "app_roomtypetone",
+      "app_schedulegrid",
+      "app_schedulegridbody",
+      "app_scorebreakdown",
+      "app_sessionblock",
+      "app_staticsessionblock",
+      "app_substitutionpanel",
+      "app_teacheravailabilityitem",
+      "app_teacheravailabilityresponse",
+      "app_teacherflowstep",
+      "app_technical_columns",
+      "app_totimeblockid"
+    ],
+    "2": [
+      "api_client_api",
+      "api_scheduleplans",
+      "api_scheduleplans_approvescheduleplan",
+      "api_scheduleplans_createscheduleplan",
+      "api_scheduleplans_generatescheduleplan",
+      "api_scheduleplans_getscheduleresult",
+      "api_scheduleplans_listscheduleplans",
+      "api_scheduleplans_listscheduleviolations",
+      "api_scheduleplans_lockscheduleplan",
+      "api_scheduleplans_submitmanualscheduleedit",
+      "api_scheduleplans_validatescheduleplan",
+      "api_substitutions",
+      "api_substitutions_createsubstitution",
+      "api_substitutions_listsubstitutions",
+      "types_schedule",
+      "types_schedule_assignment",
+      "types_schedule_generationresponse",
+      "types_schedule_gridview",
+      "types_schedule_manualdraft",
+      "types_schedule_manualeditresponse",
+      "types_schedule_planstatus",
+      "types_schedule_scheduleplandraft",
+      "types_schedule_scheduleplansummary",
+      "types_schedule_scheduleresult",
+      "types_schedule_substitutiondraft",
+      "types_schedule_substitutionresponse",
+      "types_schedule_unassignedsession",
+      "types_schedule_validationissue",
+      "types_schedule_validationresponse",
+      "types_schedule_violation"
+    ],
+    "3": [
       "api_catalogs",
       "api_catalogs_createcatalogitem",
       "api_catalogs_listcatalog",
+      "api_catalogs_updatecatalogitem",
       "api_client",
       "api_client_apiform",
+      "api_client_apiurl",
       "api_client_formatapierror",
       "api_imports",
       "api_imports_importacademicdata",
@@ -60,140 +177,216 @@
       "types_import_importresponse",
       "types_import_importsummary"
     ],
-    "2": [
-      "types_schedule",
-      "types_schedule_assignment",
-      "types_schedule_generationresponse",
-      "types_schedule_gridview",
-      "types_schedule_manualdraft",
-      "types_schedule_manualeditresponse",
-      "types_schedule_planstatus",
-      "types_schedule_scheduleplansummary",
-      "types_schedule_scheduleresult",
-      "types_schedule_validationissue",
-      "types_schedule_validationresponse",
-      "types_schedule_violation"
-    ],
-    "3": [
-      "api_client_api",
-      "api_scheduleplans",
-      "api_scheduleplans_approvescheduleplan",
-      "api_scheduleplans_generatescheduleplan",
-      "api_scheduleplans_getscheduleresult",
-      "api_scheduleplans_listscheduleplans",
-      "api_scheduleplans_listscheduleviolations",
-      "api_scheduleplans_lockscheduleplan",
-      "api_scheduleplans_submitmanualscheduleedit",
-      "api_scheduleplans_validatescheduleplan"
-    ],
     "4": [
-      "api_substitutions",
-      "api_substitutions_createsubstitution",
-      "api_substitutions_listsubstitutions",
-      "types_schedule_substitutiondraft",
-      "types_schedule_substitutionresponse"
+      "config_catalogs",
+      "config_catalogs_catalogs",
+      "config_catalogs_cohorts_catalog",
+      "config_catalogs_common_area_careers_catalog",
+      "config_catalogs_common_areas_catalog",
+      "config_catalogs_curricula_catalog",
+      "config_catalogs_curriculum_courses_catalog",
+      "config_catalogs_defaultjourneyvalues",
+      "config_catalogs_defaultroomvalues",
+      "config_catalogs_fixed_breaks_catalog",
+      "config_catalogs_journey_presets",
+      "config_catalogs_journeyformvalues",
+      "config_catalogs_relationfield",
+      "config_catalogs_relationlookupkey",
+      "config_catalogs_room_type_options",
+      "config_catalogs_roomformvalues",
+      "config_catalogs_roomtype",
+      "config_catalogs_teacherrelationconfig"
     ],
     "5": [
+      "app_countjourneyblocks",
+      "app_formatclock",
+      "app_formatduration",
+      "app_formattimerange",
+      "app_journeyblocklabel",
+      "app_journeydurationlabel",
+      "app_journeyformerror",
+      "app_journeypreviewdetail",
+      "app_journeytiming",
+      "app_minutesofday",
+      "app_timepage"
+    ],
+    "6": [
+      "app_coursename",
+      "app_gridoptions",
+      "app_manualeditdrawer",
+      "app_publictext",
+      "app_recordname",
+      "app_relationcell",
+      "app_relationoptionlabel",
+      "app_sessioncard",
+      "app_teacherspage",
+      "app_unassignedname"
+    ],
+    "7": [
+      "app_roomcapacity",
+      "app_roomcapacitylabel",
+      "app_roomformerror",
+      "app_roominteger",
+      "app_roomlocation",
+      "app_roompreviewdetail",
+      "app_roompreviewtitle",
+      "app_roomspage",
+      "app_roomtypelabel"
+    ],
+    "8": [
+      "main_coursename",
+      "main_gridoptions",
+      "main_manualeditdrawer",
+      "main_publictext",
+      "main_sessioncard",
+      "main_unassignedname"
+    ],
+    "9": [
       "components_badge",
       "components_badge_badge",
       "components_statusbadge",
       "components_statusbadge_statusbadge",
       "components_statusbadge_tones"
     ],
-    "6": [
+    "10": [
+      "app_catalogminitable",
+      "app_catalogpage",
+      "app_teacherrelationpanel",
+      "app_usercolumns"
+    ],
+    "11": [
+      "main_recordname",
+      "main_relationcell",
+      "main_relationoptionlabel",
+      "main_teacherspage"
+    ],
+    "12": [
       "types_auth",
       "types_auth_role",
       "types_auth_session",
       "types_auth_user"
     ],
-    "7": [
+    "13": [
+      "main_catalogminitable",
+      "main_catalogpage",
+      "main_usercolumns"
+    ],
+    "14": [
+      "app_actionreason",
+      "app_scheduleplanpage"
+    ],
+    "15": [
+      "app_comparerooms",
+      "app_roomsortvalue"
+    ],
+    "16": [
       "components_actionbutton",
       "components_actionbutton_actionbutton"
     ],
-    "8": [
-      "components_apipending",
-      "components_apipending_apipending"
-    ],
-    "9": [
+    "17": [
       "components_emptystate",
       "components_emptystate_emptystate"
     ],
-    "10": [
+    "18": [
       "components_table",
       "components_table_table"
     ],
-    "11": [
+    "19": [
+      "main_actionreason",
+      "main_scheduleplanpage"
+    ],
+    "20": [
       "main_countjourneyblocks",
       "main_minutesofday"
     ]
   },
   "cohesion": {
-    "0": 0.05405405405405406,
-    "1": 0.16374269005847952,
-    "2": 0.16666666666666666,
-    "3": 0.37777777777777777,
-    "4": 0.4,
-    "5": 0.5,
-    "6": 0.5,
-    "7": 1.0,
-    "8": 1.0,
-    "9": 1.0,
-    "10": 1.0,
-    "11": 1.0
+    "0": 0.03076923076923077,
+    "1": 0.03773584905660377,
+    "2": 0.11954022988505747,
+    "3": 0.14761904761904762,
+    "4": 0.1111111111111111,
+    "5": 0.2545454545454545,
+    "6": 0.2222222222222222,
+    "7": 0.25,
+    "8": 0.4,
+    "9": 0.5,
+    "10": 0.5,
+    "11": 0.5,
+    "12": 0.5,
+    "13": 0.6666666666666666,
+    "14": 1.0,
+    "15": 1.0,
+    "16": 1.0,
+    "17": 1.0,
+    "18": 1.0,
+    "19": 1.0,
+    "20": 1.0
   },
   "gods": [
     {
       "id": "api_client_api",
       "label": "api()",
-      "degree": 20
+      "degree": 23
     },
     {
       "id": "types_catalog_pageresponse",
       "label": "PageResponse",
-      "degree": 5
+      "degree": 6
+    },
+    {
+      "id": "main_publictext",
+      "label": "publicText()",
+      "degree": 6
+    },
+    {
+      "id": "app_publictext",
+      "label": "publicText()",
+      "degree": 6
+    },
+    {
+      "id": "app_journeytiming",
+      "label": "journeyTiming()",
+      "degree": 6
+    },
+    {
+      "id": "app_journeypreviewdetail",
+      "label": "journeyPreviewDetail()",
+      "degree": 6
     },
     {
       "id": "api_client_apiform",
       "label": "apiForm()",
-      "degree": 4
+      "degree": 5
+    },
+    {
+      "id": "api_client_apiurl",
+      "label": "apiUrl()",
+      "degree": 5
+    },
+    {
+      "id": "app_teacherrelationpanel",
+      "label": "TeacherRelationPanel()",
+      "degree": 5
     },
     {
       "id": "api_catalogs_listcatalog",
       "label": "listCatalog()",
-      "degree": 3
-    },
-    {
-      "id": "api_catalogs_createcatalogitem",
-      "label": "createCatalogItem()",
-      "degree": 3
-    },
-    {
-      "id": "api_client_formatapierror",
-      "label": "formatApiError()",
-      "degree": 3
-    },
-    {
-      "id": "api_imports_importacademicdata",
-      "label": "importAcademicData()",
-      "degree": 3
-    },
-    {
-      "id": "api_imports_listimporterrors",
-      "label": "listImportErrors()",
-      "degree": 3
-    },
-    {
-      "id": "api_scheduleplans_listscheduleplans",
-      "label": "listSchedulePlans()",
-      "degree": 3
-    },
-    {
-      "id": "api_scheduleplans_validatescheduleplan",
-      "label": "validateSchedulePlan()",
-      "degree": 3
+      "degree": 4
     }
   ],
   "surprises": [
+    {
+      "source": "TeacherRelationPanel()",
+      "target": "userColumns()",
+      "source_files": [
+        "App.tsx",
+        "main.tsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
     {
       "source": "listCatalog()",
       "target": "api()",
@@ -228,26 +421,15 @@
       "why": "bridges separate communities"
     },
     {
-      "source": "createSubstitution()",
+      "source": "approveSchedulePlan()",
       "target": "api()",
       "source_files": [
-        "api/substitutions.ts",
+        "api/schedulePlans.ts",
         "api/client.ts"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "why": "bridges separate communities"
-    },
-    {
-      "source": "listSubstitutions()",
-      "target": "api()",
-      "source_files": [
-        "api/substitutions.ts",
-        "api/client.ts"
-      ],
-      "confidence": "EXTRACTED",
-      "relation": "calls",
-      "why": "bridges separate communities"
+      "why": "cross-file semantic connection"
     }
   ],
   "tokens": {

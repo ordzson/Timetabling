@@ -11,3 +11,10 @@ export function createCatalogItem(resource: string, payload: Record<string, unkn
     body: JSON.stringify(payload),
   }, token);
 }
+
+export function updateCatalogItem(resource: string, id: string, payload: Record<string, unknown>, token: string) {
+  return api(`/api/catalog/${resource}/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  }, token);
+}

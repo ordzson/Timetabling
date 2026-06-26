@@ -212,18 +212,29 @@ Catalogos soportados por `/api/catalog/{resource}`:
 | `curricula` | `code`, `careerId`, `year`, `isActive`, `validFrom`, `validUntil` |
 | `courses` | `code`, `name`, `requiresLab`, `weeklyBlocksMin`, `weeklyBlocksMax`, `preferences` |
 | `cohorts` | `careerId`, `curriculumId`, `semesterNumber`, `section`, `journeyId`, `expectedStudents`, `active` |
+| `curriculum-courses` | `curriculumId`, `courseId`, `semesterNumber` |
 | `teachers` | `code`, `fullName`, `priority`, `minCourses`, `maxCourses`, `active` |
+| `teacher-courses` | `teacherId`, `courseId`, `preference` |
+| `teacher-availability` | `teacherId`, `journeyId`, `dayOfWeek`, `startBlock`, `durationBlocks`, `preference`, `source` |
+| `teacher-career-journeys` | `teacherId`, `careerId`, `journeyId`, `active` |
 | `rooms` | `code`, `capacity`, `type`, `floor`, `number`, `active` |
 | `journeys` | `code`, `name`, `blockMinutes`, `startTime`, `endTime` |
+| `fixed-breaks` | `journeyId`, `dayOfWeek`, `startBlock`, `durationBlocks`, `reason` |
+| `common-areas` | `code`, `courseId`, `journeyId`, `semesterNumber`, `name`, `active` |
+| `common-area-careers` | `commonAreaRuleId`, `careerId`, `curriculumId` |
+| `resources` | `code`, `name` |
+| `room-resources` | `roomId`, `resourceId` |
+| `course-required-resources` | `courseId`, `resourceId` |
 
 Grupos de implementacion:
 
 | Grupo | Resources |
 |---|---|
-| Academico | `careers`, `curricula`, `courses`, `cohorts` |
+| Academico | `careers`, `curricula`, `curriculum-courses`, `courses`, `cohorts` |
 | Tiempo | `journeys` |
-| Docentes | `teachers` |
-| Espacios | `rooms` |
+| Tiempo extendido | `fixed-breaks` |
+| Docentes | `teachers`, `teacher-courses`, `teacher-availability`, `teacher-career-journeys` |
+| Espacios | `rooms`, `common-areas`, `common-area-careers`, `resources`, `room-resources`, `course-required-resources` |
 
 Mantener una ruta publica simple (`/api/catalog/{resource}`), pero separar
 servicios internos por grupo cuando el CRUD deje de ser identico. No crear
